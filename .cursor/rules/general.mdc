@@ -13,5 +13,10 @@ alwaysApply: true
 7. zod schema should be defined outside of react components
 8. use contextual ids for i18n keys instead of literal words 
 9. use mantine for the layout
+10. never edit the openapi.yaml file, instead of we should adhere to it
+11. we use lucid icons
+12. never use staic hardcoded text, use i18n
+13. I'm more inclined to flat design 
+14. stop generating .md files are you finish your tasks
 
 

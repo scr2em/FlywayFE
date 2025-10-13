@@ -1,75 +1,186 @@
-# React + TypeScript + Vite
+# FlywayFE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application built with TypeScript, Vite, Mantine UI, and React Query.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎨 **Professional SaaS UI** - Modern, polished interface with gradient designs and premium feel
+- 🌐 **Internationalization (i18n)** - Multi-language support with react-i18next (currently English)
+- 🔐 **Authentication** - Complete auth flow with login, signup, and JWT token management
+- 💎 **Mantine UI** - Premium components with consistent design system
+- 📱 **Responsive Design** - Mobile-first approach with breakpoint-based layouts
+- 🏗️ **Feature Slice Pattern** - Well-organized architecture
+- ✨ **Form Validation** - Using react-hook-form with Zod schemas
+- 🔄 **API Integration** - Type-safe API client generated from OpenAPI specs
+- 🚀 **React Query** - Efficient data fetching and caching
+- 🎯 **Lucide Icons** - Beautiful, consistent icon system
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Mantine** - UI component library
+- **React Router** - Client-side routing
+- **React Query** - Server state management
+- **React Hook Form** - Form handling
+- **Zod** - Schema validation
+- **Axios** - HTTP client
+- **i18next** - Internationalization
+- **Lucide React** - Icon library
 
-Note: This will impact Vite dev & build performances.
+## Project Structure
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── app/                    # Application layer
+│   ├── providers/         # Global providers (Theme, Query, Auth)
+│   └── routes/            # Route configuration
+├── features/              # Feature-based modules
+│   ├── auth/
+│   │   ├── login/
+│   │   │   ├── model/    # Validation schemas
+│   │   │   └── ui/       # UI components
+│   │   └── signup/
+│   │       ├── model/
+│   │       └── ui/
+│   └── dashboard/
+│       └── ui/
+├── shared/                # Shared resources
+│   ├── api/
+│   │   ├── client.ts     # API client with interceptors
+│   │   └── queries/      # React Query hooks
+│   ├── i18n/
+│   │   ├── config.ts     # i18n configuration
+│   │   └── locales/      # Translation files
+│   └── lib/
+│       ├── auth/         # Auth context
+│       └── router/       # Route guards
+└── generated-api.ts       # Auto-generated from OpenAPI
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18+ 
+- pnpm (recommended) or npm
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd FlywayFE
 ```
+
+2. Install dependencies:
+```bash
+pnpm install
+```
+
+3. Create a `.env` file (copy from `.env.example`):
+```bash
+cp .env.example .env
+```
+
+4. Update the API URL in `.env`:
+```
+VITE_API_URL=http://localhost:8080/api
+```
+
+### Development
+
+Start the development server:
+```bash
+pnpm dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### Build
+
+Build for production:
+```bash
+pnpm build
+```
+
+Preview production build:
+```bash
+pnpm preview
+```
+
+### Linting
+
+Run ESLint:
+```bash
+pnpm lint
+```
+
+## API Code Generation
+
+The project uses `swagger-typescript-api` to generate type-safe API clients from OpenAPI specifications.
+
+To regenerate the API client:
+```bash
+pnpm api
+```
+
+This will read `openapi.yaml` and generate `src/generated-api.ts`.
+
+## Available Pages
+
+### 🔐 Authentication Pages
+- `/login` - User login page with gradient background and modern form design
+- `/signup` - User registration page with enhanced UX
+
+### 📊 Dashboard
+- `/dashboard` - Protected dashboard featuring:
+  - Professional header with navigation
+  - Stats cards (Projects, Team Members, Revenue, Organizations)
+  - User information grid with color-coded icons
+  - Quick action buttons
+  - User profile menu with dropdown
+
+## Authentication Flow
+
+1. User logs in or signs up
+2. JWT tokens (access + refresh) are stored in localStorage
+3. API client automatically includes access token in requests
+4. If access token expires, the refresh token is used automatically
+5. If refresh token expires, user is redirected to login
+
+## Adding New Features
+
+Follow the Feature Slice Design pattern:
+
+1. Create a new feature folder under `src/features/`
+2. Organize by layers: `model/`, `ui/`, `api/`
+3. Add queries/mutations in `src/shared/api/queries/`
+4. Update translations in `src/shared/i18n/locales/en.json`
+5. Use contextual IDs for i18n keys
+
+## Code Guidelines
+
+- ✅ Use React Hook Form with Zod for forms
+- ✅ Define Zod schemas outside components
+- ✅ Use React Query for all API calls
+- ✅ Use contextual i18n keys (not literal text)
+- ✅ Use Mantine components for layout
+- ✅ Use Lucide icons for all icons
+- ✅ Follow responsive design principles
+- ✅ Use TypeScript strict mode
+- ✅ Use type-only imports for types
+- ✅ Follow the established color scheme and gradients
+- ✅ Use consistent spacing and sizing scales
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Ensure tests pass and linter is happy
+4. Submit a pull request
+
+## License
+
+[Your License Here]

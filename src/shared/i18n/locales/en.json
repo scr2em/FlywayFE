@@ -1,0 +1,76 @@
+{
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account",
+      "email_label": "Email",
+      "email_placeholder": "Enter your email",
+      "password_label": "Password",
+      "password_placeholder": "Enter your password",
+      "submit_button": "Sign In",
+      "no_account": "Don't have an account?",
+      "signup_link": "Sign up",
+      "error_invalid_credentials": "Invalid email or password",
+      "error_generic": "An error occurred. Please try again."
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Sign up to get started",
+      "email_label": "Email",
+      "email_placeholder": "Enter your email",
+      "password_label": "Password",
+      "password_placeholder": "Enter your password (min 8 characters)",
+      "first_name_label": "First Name",
+      "first_name_placeholder": "Enter your first name",
+      "last_name_label": "Last Name",
+      "last_name_placeholder": "Enter your last name",
+      "submit_button": "Sign Up",
+      "have_account": "Already have an account?",
+      "login_link": "Sign in",
+      "error_email_exists": "Email already exists",
+      "error_generic": "An error occurred. Please try again."
+    },
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {{name}}!",
+    "user_info": "User Information",
+    "email": "Email",
+    "status": "Status",
+    "organization": "Organization",
+    "no_organization": "No organization",
+    "created_at": "Member since",
+    "quick_actions": "Quick Actions",
+    "view_profile": "View Profile",
+    "create_organization": "Create Organization"
+  },
+  "organization": {
+    "create": {
+      "title": "Create Your Organization",
+      "subtitle": "Set up your workspace to get started",
+      "name_label": "Organization Name",
+      "name_placeholder": "Enter organization name",
+      "description_label": "Description (Optional)",
+      "description_placeholder": "Tell us about your organization",
+      "submit_button": "Create Organization",
+      "success_message": "Organization created successfully",
+      "error_generic": "Failed to create organization. Please try again."
+    }
+  },
+  "validation": {
+    "email_required": "Email is required",
+    "email_invalid": "Invalid email address",
+    "password_required": "Password is required",
+    "password_min": "Password must be at least 8 characters",
+    "first_name_required": "First name is required",
+    "last_name_required": "Last name is required",
+    "organization_name_required": "Organization name is required"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}
+
