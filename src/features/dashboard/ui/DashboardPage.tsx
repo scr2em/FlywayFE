@@ -1,5 +1,4 @@
 import {
-  Container,
   Paper,
   Title,
   Text,
@@ -68,69 +67,67 @@ export function DashboardPage() {
         style={{
           backgroundColor: 'white',
           borderBottom: '1px solid #e9ecef',
-          padding: '1rem 0',
+          padding: '1rem 2rem',
         }}
       >
-        <Container size="xl">
-          <Group justify="space-between">
-            <Group>
-              <ThemeIcon
-                size={40}
-                radius="md"
-                variant="gradient"
-                gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
-              >
-                <Plus size={24} />
-              </ThemeIcon>
-              <Title order={3}>Flyway</Title>
-            </Group>
-
-            <Group>
-              <ActionIcon variant="light" size="lg" radius="md">
-                <Bell size={20} />
-              </ActionIcon>
-
-              <Menu shadow="md" width={200}>
-                <Menu.Target>
-                  <ActionIcon variant="light" size="lg" radius="md">
-                    <Avatar
-                      size={32}
-                      radius="xl"
-                      color="blue"
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {getInitials(user.firstName, user.lastName)}
-                    </Avatar>
-                  </ActionIcon>
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                  <Menu.Label>
-                    {user.firstName} {user.lastName}
-                  </Menu.Label>
-                  <Menu.Item leftSection={<User style={{ width: rem(14), height: rem(14) }} />}>
-                    Profile
-                  </Menu.Item>
-                  <Menu.Item leftSection={<Settings style={{ width: rem(14), height: rem(14) }} />}>
-                    Settings
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item
-                    color="red"
-                    leftSection={<LogOut style={{ width: rem(14), height: rem(14) }} />}
-                    onClick={handleLogout}
-                  >
-                    {t('auth.logout')}
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </Group>
+        <Group justify="space-between">
+          <Group>
+            <ThemeIcon
+              size={40}
+              radius="md"
+              variant="gradient"
+              gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+            >
+              <Plus size={24} />
+            </ThemeIcon>
+            <Title order={3}>Flyway</Title>
           </Group>
-        </Container>
+
+          <Group>
+            <ActionIcon variant="light" size="lg" radius="md">
+              <Bell size={20} />
+            </ActionIcon>
+
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <ActionIcon variant="light" size="lg" radius="md">
+                  <Avatar
+                    size={32}
+                    radius="xl"
+                    color="blue"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {getInitials(user.firstName, user.lastName)}
+                  </Avatar>
+                </ActionIcon>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Label>
+                  {user.firstName} {user.lastName}
+                </Menu.Label>
+                <Menu.Item leftSection={<User style={{ width: rem(14), height: rem(14) }} />}>
+                  Profile
+                </Menu.Item>
+                <Menu.Item leftSection={<Settings style={{ width: rem(14), height: rem(14) }} />}>
+                  Settings
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item
+                  color="red"
+                  leftSection={<LogOut style={{ width: rem(14), height: rem(14) }} />}
+                  onClick={handleLogout}
+                >
+                  {t('auth.logout')}
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+        </Group>
       </Box>
 
       {/* Main Content */}
-      <Container size="xl" py="xl">
+      <Box py="xl" px="xl">
         <Stack gap="xl">
           {/* Welcome Section */}
           <Box>
@@ -362,7 +359,7 @@ export function DashboardPage() {
             </Stack>
           </Paper>
         </Stack>
-      </Container>
+      </Box>
     </Box>
   );
 }

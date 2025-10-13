@@ -1,4 +1,4 @@
-import { Container, Paper, Title, Text, Stack, Box, Group, ThemeIcon } from '@mantine/core';
+import { Paper, Title, Text, Stack, Box, Group, ThemeIcon } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { Plane } from 'lucide-react';
 import { SignupForm } from './SignupForm';
@@ -17,7 +17,7 @@ export function SignupPage() {
         padding: '20px',
       }}
     >
-      <Container size={520}>
+      <Box style={{ width: '100%', maxWidth: '520px' }}>
         <Stack gap="xl">
           {/* Logo/Brand */}
           <Group justify="center">
@@ -70,7 +70,7 @@ export function SignupPage() {
             </Stack>
           </Paper>
         </Stack>
-      </Container>
+      </Box>
     </Box>
   );
 }

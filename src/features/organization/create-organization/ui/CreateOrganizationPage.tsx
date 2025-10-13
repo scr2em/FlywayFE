@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Container, Paper, Title, Text, Stack, Center, Box } from '@mantine/core';
+import { Paper, Title, Text, Stack, Center, Box } from '@mantine/core';
 import { Building2 } from 'lucide-react';
 import { CreateOrganizationForm } from './CreateOrganizationForm';
 
@@ -10,6 +10,7 @@ export function CreateOrganizationPage() {
     <Box
       style={{
         minHeight: '100vh',
+        width: '100%',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         display: 'flex',
         alignItems: 'center',
@@ -17,7 +18,7 @@ export function CreateOrganizationPage() {
         padding: '2rem',
       }}
     >
-      <Container size="sm" style={{ width: '100%' }}>
+      <Box style={{ width: '100%', maxWidth: '540px' }}>
         <Paper
           radius="lg"
           p="xl"
@@ -56,7 +57,7 @@ export function CreateOrganizationPage() {
             <CreateOrganizationForm />
           </Stack>
         </Paper>
-      </Container>
+      </Box>
     </Box>
   );
 }

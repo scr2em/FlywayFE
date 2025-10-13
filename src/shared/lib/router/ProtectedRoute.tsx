@@ -15,7 +15,7 @@ export function ProtectedRoute({ children, requireOrganization = true }: Protect
   const { data: user, isLoading } = useCurrentUserQuery(isAuthenticated);
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={`/login${location.search}`} replace />;
   }
 
   if (isLoading) {
@@ -28,12 +28,12 @@ export function ProtectedRoute({ children, requireOrganization = true }: Protect
 
   // If organization is required and user doesn't have one, redirect to create organization
   if (requireOrganization && !user?.organization) {
-    return <Navigate to="/create-organization" replace />;
+    return <Navigate to={`/create-organization${location.search}`} replace />;
   }
 
   // If user has organization and tries to access create-organization page, redirect to dashboard
   if (!requireOrganization && user?.organization && location.pathname === '/create-organization') {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={`/dashboard${location.search}`} replace />;
   }
 
   return <>{children}</>;
