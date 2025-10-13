@@ -35,7 +35,9 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome, {{name}}!",
+    "welcome_subtitle": "Here's what's happening with your business today",
     "user_info": "User Information",
+    "full_name": "Full Name",
     "email": "Email",
     "status": "Status",
     "organization": "Organization",
@@ -43,7 +45,13 @@
     "created_at": "Member since",
     "quick_actions": "Quick Actions",
     "view_profile": "View Profile",
-    "create_organization": "Create Organization"
+    "create_organization": "Create Organization",
+    "stats": {
+      "active_projects": "Active Projects",
+      "team_members": "Team Members",
+      "revenue": "Revenue",
+      "organizations": "Organizations"
+    }
   },
   "organization": {
     "create": {
@@ -71,6 +79,38 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "team": "Team",
+    "analytics": "Analytics",
+    "organization": "Organization",
+    "settings": "Settings",
+    "profile": "Profile",
+    "organization_info": "Current Organization"
+  },
+  "team": {
+    "title": "Team Members",
+    "subtitle": "Manage your organization's team ({{count}} members)",
+    "invite_member": "Invite Member",
+    "no_organization_title": "No Organization",
+    "no_organization_message": "You need to be part of an organization to view team members.",
+    "error_loading": "Failed to load team members. Please try again.",
+    "mock_data_title": "Mock Data Notice",
+    "mock_data_message": "This page is currently using mock data. The API endpoint for fetching organization members needs to be added to the backend.",
+    "you": "(You)",
+    "load_more": "Load More Members",
+    "loading_more": "Loading...",
+    "total_members": "Total Members",
+    "loaded_members": "Loaded Members",
+    "table": {
+      "member": "Member",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "joined": "Joined"
+    }
   }
 }
 

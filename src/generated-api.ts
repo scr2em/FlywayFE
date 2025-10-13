@@ -316,6 +316,18 @@ export interface OrganizationMemberResponse {
   joinedAt: string;
 }
 
+/** Paginated organization member response */
+export interface PaginatedOrganizationMemberResponse {
+  /** Array of members for this page */
+  data: OrganizationMemberResponse[];
+  /** Total number of items across all pages */
+  total: number;
+  /** Number of items in this page */
+  count: number;
+  /** Maximum items per page */
+  itemsPerPage: number;
+}
+
 /** Error response */
 export interface ErrorResponse {
   /** Error type */
@@ -395,7 +407,7 @@ export class HttpClient<SecurityDataType = unknown> {
   }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({
       ...axiosConfig,
-      baseURL: axiosConfig.baseURL || "http://localhost:8080",
+      baseURL: axiosConfig.baseURL || "http://localhost:8080/api",
     });
     this.secure = secure;
     this.format = format;
@@ -509,7 +521,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title Flyway API
  * @version 1.0.0
- * @baseUrl http://localhost:8080
+ * @baseUrl http://localhost:8080/api
  *
  * API for Flyway application
  */
@@ -562,12 +574,29 @@ export class Api<
      * @request POST:/auth/refresh
      */
     refreshToken: (data: RefreshTokenRequest, params: RequestParams = {}) =>
-      this.request<RefreshTokenResponse, ErrorResponse>({
+      this.request<AuthResponse, ErrorResponse>({
         path: `/auth/refresh`,
         method: "POST",
         body: data,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name Logout
+     * @summary Logout user
+     * @request POST:/auth/logout
+     */
+    logout: (data: RefreshTokenRequest, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/auth/logout`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
   };
@@ -594,14 +623,36 @@ export class Api<
      * No description
      *
      * @tags Users
-     * @name UpdateCurrentUser
-     * @summary Update current user information
-     * @request PUT:/users/me
+     * @name GetUserById
+     * @summary Get user by ID
+     * @request GET:/users/{id}
      * @secure
      */
-    updateCurrentUser: (data: UpdateUserRequest, params: RequestParams = {}) =>
+    getUserById: (id: string, params: RequestParams = {}) =>
       this.request<UserResponse, ErrorResponse>({
-        path: `/users/me`,
+        path: `/users/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UpdateUser
+     * @summary Update user
+     * @request PUT:/users/{id}
+     * @secure
+     */
+    updateUser: (
+      id: string,
+      data: UpdateUserRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserResponse, ErrorResponse>({
+        path: `/users/${id}`,
         method: "PUT",
         body: data,
         secure: true,
@@ -609,8 +660,79 @@ export class Api<
         format: "json",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name DeleteUser
+     * @summary Delete user
+     * @request DELETE:/users/{id}
+     * @secure
+     */
+    deleteUser: (id: string, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/users/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name VerifyEmail
+     * @summary Verify user email
+     * @request POST:/users/{id}/verify-email
+     * @secure
+     */
+    verifyEmail: (id: string, params: RequestParams = {}) =>
+      this.request<UserResponse, ErrorResponse>({
+        path: `/users/${id}/verify-email`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetAllUsers
+     * @summary Get all users in organization
+     * @request GET:/users
+     * @secure
+     */
+    getAllUsers: (params: RequestParams = {}) =>
+      this.request<UserResponse[], ErrorResponse>({
+        path: `/users`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
   };
   organizations = {
+    /**
+     * No description
+     *
+     * @tags Organizations
+     * @name GetCurrentOrganization
+     * @summary Get current organization
+     * @request GET:/organizations
+     * @secure
+     */
+    getCurrentOrganization: (params: RequestParams = {}) =>
+      this.request<OrganizationResponse, ErrorResponse>({
+        path: `/organizations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -638,14 +760,55 @@ export class Api<
      * No description
      *
      * @tags Organizations
-     * @name GetOrganization
-     * @summary Get organization by ID
-     * @request GET:/organizations/{id}
+     * @name UpdateCurrentOrganization
+     * @summary Update current organization
+     * @request PUT:/organizations
      * @secure
      */
-    getOrganization: (id: string, params: RequestParams = {}) =>
+    updateCurrentOrganization: (
+      data: UpdateOrganizationRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<OrganizationResponse, ErrorResponse>({
-        path: `/organizations/${id}`,
+        path: `/organizations`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Organizations
+     * @name DeleteCurrentOrganization
+     * @summary Delete current organization
+     * @request DELETE:/organizations
+     * @secure
+     */
+    deleteCurrentOrganization: (params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/organizations`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+  };
+  roles = {
+    /**
+     * No description
+     *
+     * @tags Roles
+     * @name GetRoles
+     * @summary Get all roles in organization
+     * @request GET:/roles
+     * @secure
+     */
+    getRoles: (params: RequestParams = {}) =>
+      this.request<RoleResponse[], ErrorResponse>({
+        path: `/roles`,
         method: "GET",
         secure: true,
         format: "json",
@@ -655,24 +818,408 @@ export class Api<
     /**
      * No description
      *
-     * @tags Organizations
-     * @name UpdateOrganization
-     * @summary Update organization
-     * @request PUT:/organizations/{id}
+     * @tags Roles
+     * @name CreateRole
+     * @summary Create a new role
+     * @request POST:/roles
      * @secure
      */
-    updateOrganization: (
+    createRole: (data: CreateRoleRequest, params: RequestParams = {}) =>
+      this.request<RoleResponse, ErrorResponse>({
+        path: `/roles`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Roles
+     * @name GetRoleById
+     * @summary Get role by ID
+     * @request GET:/roles/{id}
+     * @secure
+     */
+    getRoleById: (id: string, params: RequestParams = {}) =>
+      this.request<RoleResponse, ErrorResponse>({
+        path: `/roles/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Roles
+     * @name UpdateRole
+     * @summary Update role
+     * @request PUT:/roles/{id}
+     * @secure
+     */
+    updateRole: (
       id: string,
-      data: UpdateOrganizationRequest,
+      data: UpdateRoleRequest,
       params: RequestParams = {},
     ) =>
-      this.request<OrganizationResponse, ErrorResponse>({
-        path: `/organizations/${id}`,
+      this.request<RoleResponse, ErrorResponse>({
+        path: `/roles/${id}`,
         method: "PUT",
         body: data,
         secure: true,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Roles
+     * @name DeleteRole
+     * @summary Delete role
+     * @request DELETE:/roles/{id}
+     * @secure
+     */
+    deleteRole: (id: string, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/roles/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+  };
+  permissions = {
+    /**
+     * No description
+     *
+     * @tags Permissions
+     * @name GetAllPermissions
+     * @summary Get all permissions
+     * @request GET:/permissions
+     * @secure
+     */
+    getAllPermissions: (params: RequestParams = {}) =>
+      this.request<PermissionResponse[], ErrorResponse>({
+        path: `/permissions`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Permissions
+     * @name GetPermissionById
+     * @summary Get permission by ID
+     * @request GET:/permissions/{id}
+     * @secure
+     */
+    getPermissionById: (id: string, params: RequestParams = {}) =>
+      this.request<PermissionResponse, ErrorResponse>({
+        path: `/permissions/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Permissions
+     * @name GetPermissionByCode
+     * @summary Get permission by code
+     * @request GET:/permissions/code/{code}
+     * @secure
+     */
+    getPermissionByCode: (code: string, params: RequestParams = {}) =>
+      this.request<PermissionResponse, ErrorResponse>({
+        path: `/permissions/code/${code}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Permissions
+     * @name GetPermissionsByCategory
+     * @summary Get permissions by category
+     * @request GET:/permissions/category/{category}
+     * @secure
+     */
+    getPermissionsByCategory: (category: string, params: RequestParams = {}) =>
+      this.request<PermissionResponse[], ErrorResponse>({
+        path: `/permissions/category/${category}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
+  invitations = {
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name GetInvitationsByOrganization
+     * @summary Get all invitations for organization
+     * @request GET:/invitations
+     * @secure
+     */
+    getInvitationsByOrganization: (params: RequestParams = {}) =>
+      this.request<InvitationResponse[], ErrorResponse>({
+        path: `/invitations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name CreateInvitation
+     * @summary Create a new invitation
+     * @request POST:/invitations
+     * @secure
+     */
+    createInvitation: (
+      data: CreateInvitationRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<InvitationResponse, ErrorResponse>({
+        path: `/invitations`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name GetInvitationById
+     * @summary Get invitation by ID
+     * @request GET:/invitations/{id}
+     * @secure
+     */
+    getInvitationById: (id: string, params: RequestParams = {}) =>
+      this.request<InvitationResponse, ErrorResponse>({
+        path: `/invitations/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name DeleteInvitation
+     * @summary Delete invitation
+     * @request DELETE:/invitations/{id}
+     * @secure
+     */
+    deleteInvitation: (id: string, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/invitations/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name GetInvitationByToken
+     * @summary Get invitation by token
+     * @request GET:/invitations/token/{token}
+     * @secure
+     */
+    getInvitationByToken: (token: string, params: RequestParams = {}) =>
+      this.request<InvitationResponse, ErrorResponse>({
+        path: `/invitations/token/${token}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name RespondToInvitation
+     * @summary Respond to invitation (accept or reject)
+     * @request POST:/invitations/token/{token}/respond
+     * @secure
+     */
+    respondToInvitation: (
+      token: string,
+      data: RespondToInvitationRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<InvitationResponse, ErrorResponse>({
+        path: `/invitations/token/${token}/respond`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Invitations
+     * @name GetMyInvitations
+     * @summary Get invitations sent to current user
+     * @request GET:/invitations/my-invitations
+     * @secure
+     */
+    getMyInvitations: (params: RequestParams = {}) =>
+      this.request<InvitationResponse[], ErrorResponse>({
+        path: `/invitations/my-invitations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
+  members = {
+    /**
+     * No description
+     *
+     * @tags Organization Members
+     * @name GetMembers
+     * @summary Get all members in organization
+     * @request GET:/members
+     * @secure
+     */
+    getMembers: (
+      query?: {
+        /**
+         * Page number (0-based)
+         * @min 0
+         * @default 0
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         * @min 1
+         * @max 100
+         * @default 20
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PaginatedOrganizationMemberResponse, ErrorResponse>({
+        path: `/members`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Organization Members
+     * @name AddMember
+     * @summary Add a member to organization
+     * @request POST:/members
+     * @secure
+     */
+    addMember: (
+      data: AddOrganizationMemberRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<OrganizationMemberResponse, ErrorResponse>({
+        path: `/members`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Organization Members
+     * @name GetMemberById
+     * @summary Get member by ID
+     * @request GET:/members/{memberId}
+     * @secure
+     */
+    getMemberById: (memberId: string, params: RequestParams = {}) =>
+      this.request<OrganizationMemberResponse, ErrorResponse>({
+        path: `/members/${memberId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Organization Members
+     * @name UpdateMemberRole
+     * @summary Update member role
+     * @request PUT:/members/{memberId}
+     * @secure
+     */
+    updateMemberRole: (
+      memberId: string,
+      data: UpdateMemberRoleRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<OrganizationMemberResponse, ErrorResponse>({
+        path: `/members/${memberId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Organization Members
+     * @name RemoveMember
+     * @summary Remove member from organization
+     * @request DELETE:/members/{memberId}
+     * @secure
+     */
+    removeMember: (memberId: string, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/members/${memberId}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
   };

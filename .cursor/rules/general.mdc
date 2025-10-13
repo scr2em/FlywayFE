@@ -19,5 +19,6 @@ alwaysApply: true
 13. I'm more inclined to flat design 
 14. stop generating .md files are you finish your tasks
 15. when dealing with styles, use design tokens instead of hard coded values, THIS IS CRITICAL and IMPORTANT, don't use useMantineTheme or import theme, use Style props
+16. when dealing with pagination use useInfiniteQuery from react query
 
 

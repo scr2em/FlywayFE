@@ -3,7 +3,9 @@ import { LoginPage } from '../../features/auth/login';
 import { SignupPage } from '../../features/auth/signup';
 import { DashboardPage } from '../../features/dashboard';
 import { CreateOrganizationPage } from '../../features/organization/create-organization';
+import { TeamPage } from '../../features/team';
 import { ProtectedRoute, PublicRoute } from '../../shared/lib/router';
+import { AppLayout } from '../../shared/layouts';
 
 export function AppRoutes() {
   return (
@@ -32,14 +34,24 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      
+      {/* Protected routes with AppShell layout */}
       <Route
-        path="/dashboard"
         element={
           <ProtectedRoute requireOrganization={true}>
-            <DashboardPage />
+            <AppLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/projects" element={<div>Projects Page (Coming Soon)</div>} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/analytics" element={<div>Analytics Page (Coming Soon)</div>} />
+        <Route path="/organization" element={<div>Organization Page (Coming Soon)</div>} />
+        <Route path="/settings" element={<div>Settings Page (Coming Soon)</div>} />
+        <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
+      </Route>
+
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
