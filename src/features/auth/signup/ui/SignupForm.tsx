@@ -107,6 +107,7 @@ export function SignupForm() {
           <Anchor
             onClick={() => navigate('/login')}
             fw={700}
+            c="brand"
             style={{ cursor: 'pointer' }}
           >
             {t('auth.signup.login_link')}

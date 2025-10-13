@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Paper, Title, Text, Stack, Center, Box } from '@mantine/core';
+import { Paper, Title, Text, Stack, Center, Box, ThemeIcon, Flex } from '@mantine/core';
 import { Building2 } from 'lucide-react';
 import { CreateOrganizationForm } from './CreateOrganizationForm';
 
@@ -7,42 +7,33 @@ export function CreateOrganizationPage() {
   const { t } = useTranslation();
 
   return (
-    <Box
-      style={{
-        minHeight: '100vh',
-        width: '100%',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-      }}
+    <Flex
+    h="100vh" 
+    align="center"
+    justify="center"
+   
+      p="xl"
     >
-      <Box style={{ width: '100%', maxWidth: '540px' }}>
+      <Box w="100%" maw="540px">
         <Paper
           radius="lg"
           p="xl"
           shadow="xl"
+          bg="white"
           style={{
             backdropFilter: 'blur(10px)',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
           }}
         >
           <Stack gap="lg">
             <Center>
-              <Box
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+              <ThemeIcon
+                size={64}
+                radius="xl"
+                variant="gradient"
+                gradient={{ from: 'brand', to: 'accent', deg: 135 }}
               >
-                <Building2 size={32} color="white" />
-              </Box>
+                <Building2 size={32} />
+              </ThemeIcon>
             </Center>
 
             <Stack gap="xs" align="center">
@@ -58,7 +49,7 @@ export function CreateOrganizationPage() {
           </Stack>
         </Paper>
       </Box>
-    </Box>
+    </Flex>
   );
 }
 

@@ -18,6 +18,6 @@ alwaysApply: true
 12. never use staic hardcoded text, use i18n
 13. I'm more inclined to flat design 
 14. stop generating .md files are you finish your tasks
-15. when dealing with styles, use design tokens instead of hard coded values, THIS IS CRITICAL and IMPORTANT
+15. when dealing with styles, use design tokens instead of hard coded values, THIS IS CRITICAL and IMPORTANT, don't use useMantineTheme or import theme, use Style props
 
 

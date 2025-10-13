@@ -10,14 +10,13 @@ export function LoginPage() {
     <Box
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
       }}
+      p="md"
     >
-      <Box style={{ width: '100%', maxWidth: '460px' }}>
+      <Box w="100%" maw="460px">
         <Stack gap="xl">
           {/* Logo/Brand */}
           <Group justify="center">
@@ -25,7 +24,6 @@ export function LoginPage() {
               size={60}
               radius="xl"
               variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
             >
               <Plane size={36} />
             </ThemeIcon>
@@ -34,16 +32,12 @@ export function LoginPage() {
           <Box ta="center">
             <Title
               order={1}
-              style={{
-                color: 'white',
-                fontSize: '2.5rem',
-                fontWeight: 700,
-                marginBottom: '0.5rem',
-              }}
+              c="white"
+              mb="xs"
             >
               Flyway
             </Title>
-            <Text c="dimmed" size="lg" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+            <Text size="lg" c="white" style={{ opacity: 0.9 }}>
               Take your business to new heights
             </Text>
           </Box>
@@ -51,11 +45,9 @@ export function LoginPage() {
           <Paper
             withBorder
             shadow="xl"
-            p={40}
+            p="xl"
             radius="lg"
-            style={{
-              backgroundColor: 'white',
-            }}
+            bg="white"
           >
             <Stack gap="md">
               <div>

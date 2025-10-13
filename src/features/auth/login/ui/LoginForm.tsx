@@ -75,7 +75,6 @@ export function LoginForm() {
           size="md"
           loading={loginMutation.isPending}
           variant="gradient"
-          gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
         >
           {t('auth.login.submit_button')}
         </Button>
@@ -87,6 +86,7 @@ export function LoginForm() {
           <Anchor
             onClick={() => navigate('/signup')}
             fw={700}
+            c="brand"
             style={{ cursor: 'pointer' }}
           >
             {t('auth.login.signup_link')}

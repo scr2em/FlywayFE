@@ -50,7 +50,7 @@ export function DashboardPage() {
 
   if (isLoading) {
     return (
-      <Center style={{ height: '100vh' }}>
+      <Center h="100vh">
         <Loader size="lg" />
       </Center>
     );
@@ -61,14 +61,15 @@ export function DashboardPage() {
   }
 
   return (
-    <Box style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+    <Box style={{ minHeight: '100vh' }} bg="gray.0">
       {/* Header */}
       <Box
+        bg="white"
         style={{
-          backgroundColor: 'white',
-          borderBottom: '1px solid #e9ecef',
-          padding: '1rem 2rem',
+          borderBottom: '1px solid var(--mantine-color-gray-2)',
         }}
+        py="md"
+        px="xl"
       >
         <Group justify="space-between">
           <Group>
@@ -135,7 +136,7 @@ export function DashboardPage() {
               {t('dashboard.welcome', { name: user.firstName })}
             </Title>
             <Text c="dimmed" size="lg">
-              Here's what's happening with your business today
+              Here&apos;s what&apos;s happening with your business today
             </Text>
           </Box>
 
@@ -250,7 +251,7 @@ export function DashboardPage() {
 
               <Grid gutter="md">
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Card withBorder padding="md" radius="md" style={{ backgroundColor: '#f8f9fa' }}>
+                  <Card withBorder p="md" radius="md" bg="gray.0">
                     <Group>
                       <ThemeIcon color="blue" variant="light" size="lg" radius="md">
                         <User size={20} />
@@ -268,7 +269,7 @@ export function DashboardPage() {
                 </Grid.Col>
 
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Card withBorder padding="md" radius="md" style={{ backgroundColor: '#f8f9fa' }}>
+                  <Card withBorder p="md" radius="md" bg="gray.0">
                     <Group>
                       <ThemeIcon color="cyan" variant="light" size="lg" radius="md">
                         <User size={20} />
@@ -284,7 +285,7 @@ export function DashboardPage() {
                 </Grid.Col>
 
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Card withBorder padding="md" radius="md" style={{ backgroundColor: '#f8f9fa' }}>
+                  <Card withBorder p="md" radius="md" bg="gray.0">
                     <Group>
                       <ThemeIcon color="violet" variant="light" size="lg" radius="md">
                         <Building size={20} />
@@ -302,7 +303,7 @@ export function DashboardPage() {
                 </Grid.Col>
 
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Card withBorder padding="md" radius="md" style={{ backgroundColor: '#f8f9fa' }}>
+                  <Card withBorder p="md" radius="md" bg="gray.0">
                     <Group>
                       <ThemeIcon color="teal" variant="light" size="lg" radius="md">
                         <User size={20} />
