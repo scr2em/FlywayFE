@@ -1,0 +1,17 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+1. always handle i18n, currnetly we only have en
+2. always consider responsive design
+3. we use pnpm
+4. use queries or mutations from react query, all queries or mutations should be in a separate folder
+5. we use featurce slice pattern when creating new features
+6. forms should use react-hook-form with zod 
+7. zod schema should be defined outside of react components
+8. use contextual ids for i18n keys instead of literal words 
+9. use mantine for the layout
+
+
