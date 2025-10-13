@@ -81,10 +81,8 @@ export interface CreateRoleRequest {
   name: string;
   /** Role description */
   description?: string;
-  /** Organization ID */
-  organizationId: string;
-  /** List of permission IDs */
-  permissionIds?: string[];
+  /** List of permission codes */
+  permissionCodes?: string[];
 }
 
 /** Request to update a role */
@@ -93,8 +91,8 @@ export interface UpdateRoleRequest {
   name?: string;
   /** Role description */
   description?: string;
-  /** List of permission IDs */
-  permissionIds?: string[];
+  /** List of permission codes */
+  permissionCodes?: string[];
 }
 
 /** Request to create an invitation */
@@ -104,8 +102,6 @@ export interface CreateInvitationRequest {
    * @format email
    */
   email: string;
-  /** Organization ID */
-  organizationId: string;
   /** Role ID */
   roleId: string;
 }
@@ -236,6 +232,8 @@ export interface RoleResponse {
   description?: string;
   /** Organization ID */
   organizationId: string;
+  /** Whether this is a system role */
+  isSystemRole: boolean;
   /** List of permissions */
   permissions?: PermissionResponse[];
   /**
@@ -252,8 +250,8 @@ export interface RoleResponse {
 
 /** Permission information */
 export interface PermissionResponse {
-  /** Permission ID */
-  id: string;
+  /** Permission code */
+  code: string;
   /** Permission name */
   name: string;
   /** Permission description */
@@ -778,23 +776,6 @@ export class Api<
         format: "json",
         ...params,
       }),
-
-    /**
-     * No description
-     *
-     * @tags Organizations
-     * @name DeleteCurrentOrganization
-     * @summary Delete current organization
-     * @request DELETE:/organizations
-     * @secure
-     */
-    deleteCurrentOrganization: (params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/organizations`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
   };
   roles = {
     /**
@@ -917,32 +898,14 @@ export class Api<
      * No description
      *
      * @tags Permissions
-     * @name GetPermissionById
-     * @summary Get permission by ID
-     * @request GET:/permissions/{id}
-     * @secure
-     */
-    getPermissionById: (id: string, params: RequestParams = {}) =>
-      this.request<PermissionResponse, ErrorResponse>({
-        path: `/permissions/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Permissions
      * @name GetPermissionByCode
      * @summary Get permission by code
-     * @request GET:/permissions/code/{code}
+     * @request GET:/permissions/{code}
      * @secure
      */
     getPermissionByCode: (code: string, params: RequestParams = {}) =>
       this.request<PermissionResponse, ErrorResponse>({
-        path: `/permissions/code/${code}`,
+        path: `/permissions/${code}`,
         method: "GET",
         secure: true,
         format: "json",

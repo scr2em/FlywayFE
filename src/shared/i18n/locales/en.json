@@ -73,17 +73,21 @@
     "password_min": "Password must be at least 8 characters",
     "first_name_required": "First name is required",
     "last_name_required": "Last name is required",
-    "organization_name_required": "Organization name is required"
+    "organization_name_required": "Organization name is required",
+    "role_name_required": "Role name is required",
+    "organization_id_required": "Organization ID is required"
   },
   "common": {
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "error_generic": "An error occurred. Please try again."
   },
   "navigation": {
     "dashboard": "Dashboard",
     "projects": "Projects",
     "team": "Team",
+    "roles": "Roles",
     "analytics": "Analytics",
     "organization": "Organization",
     "settings": "Settings",
@@ -110,6 +114,54 @@
       "role": "Role",
       "status": "Status",
       "joined": "Joined"
+    }
+  },
+  "role": {
+    "title": "Roles",
+    "subtitle": "Manage roles and permissions ({{count}} roles)",
+    "create_button": "Create Role",
+    "no_organization_title": "No Organization",
+    "no_organization_message": "You need to be part of an organization to manage roles.",
+    "error_loading": "Failed to load roles. Please try again.",
+    "no_roles": "No roles created yet",
+    "permissions_count": "permissions",
+    "no_permissions": "No permissions",
+    "system_role": "System",
+    "system_role_edit_disabled": "System roles cannot be edited",
+    "system_role_delete_disabled": "System roles cannot be deleted",
+    "create": {
+      "title": "Create Role",
+      "name_label": "Role Name",
+      "name_placeholder": "Enter role name",
+      "description_label": "Description (Optional)",
+      "description_placeholder": "Describe the role's responsibilities",
+      "permissions_label": "Permissions",
+      "permissions_placeholder": "Select permissions for this role",
+      "submit_button": "Create Role",
+      "cancel_button": "Cancel",
+      "success_message": "Role created successfully",
+      "error_generic": "Failed to create role. Please try again."
+    },
+    "edit": {
+      "title": "Edit Role",
+      "submit_button": "Update Role",
+      "success_message": "Role updated successfully",
+      "error_generic": "Failed to update role. Please try again."
+    },
+    "delete": {
+      "title": "Delete Role",
+      "confirmation": "Are you sure you want to delete the role '{{name}}'? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "success_message": "Role deleted successfully",
+      "error_generic": "Failed to delete role. Please try again."
+    },
+    "table": {
+      "name": "Name",
+      "description": "Description",
+      "permissions": "Permissions",
+      "created": "Created",
+      "actions": "Actions"
     }
   }
 }

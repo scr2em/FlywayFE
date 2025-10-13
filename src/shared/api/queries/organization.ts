@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { apiClient } from '../client';
-import type { CreateOrganizationRequest, PaginatedOrganizationMemberResponse } from '../../../generated-api';
+import type { CreateOrganizationRequest } from '../../../generated-api';
 import { USER_QUERY_KEY } from './user';
 
 export const ORGANIZATION_MEMBERS_QUERY_KEY = ['organizationMembers'];
@@ -31,10 +31,10 @@ export function useGetOrganizationQuery() {
 }
 
 export function useOrganizationMembersQuery() {
-  return useInfiniteQuery<PaginatedOrganizationMemberResponse>({
+  return useInfiniteQuery({
     queryKey: ORGANIZATION_MEMBERS_QUERY_KEY,
-    queryFn: async ({ pageParam = 0 }) => {
-      const page = pageParam || 1
+    queryFn: async ({ pageParam }) => {
+      const page = pageParam as number;
       const limit = 20;
       
       const response = await apiClient.members.getMembers({ page, limit });

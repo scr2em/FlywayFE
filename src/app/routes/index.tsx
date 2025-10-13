@@ -4,6 +4,7 @@ import { SignupPage } from '../../features/auth/signup';
 import { DashboardPage } from '../../features/dashboard';
 import { CreateOrganizationPage } from '../../features/organization/create-organization';
 import { TeamPage } from '../../features/team';
+import { RolesPage } from '../../features/role';
 import { ProtectedRoute, PublicRoute } from '../../shared/lib/router';
 import { AppLayout } from '../../shared/layouts';
 
@@ -46,6 +47,7 @@ export function AppRoutes() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/projects" element={<div>Projects Page (Coming Soon)</div>} />
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/roles" element={<RolesPage />} />
         <Route path="/analytics" element={<div>Analytics Page (Coming Soon)</div>} />
         <Route path="/organization" element={<div>Organization Page (Coming Soon)</div>} />
         <Route path="/settings" element={<div>Settings Page (Coming Soon)</div>} />

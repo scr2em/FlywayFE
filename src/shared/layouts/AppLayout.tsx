@@ -13,6 +13,7 @@ import {
   Menu as MenuIcon,
   Folder,
   BarChart,
+  Shield,
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';
@@ -52,6 +53,11 @@ export function AppLayout() {
       path: '/team',
     },
     {
+      icon: Shield,
+      label: t('navigation.roles'),
+      path: '/roles',
+    },
+    {
       icon: BarChart,
       label: t('navigation.analytics'),
       path: '/analytics',
@@ -77,6 +83,7 @@ export function AppLayout() {
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
       padding="md"
+      bg="gray.0"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
