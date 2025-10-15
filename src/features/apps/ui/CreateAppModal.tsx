@@ -54,19 +54,20 @@ export function CreateAppModal({ opened, onClose }: CreateAppModalProps) {
     >
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <Stack gap="md">
-          <ControlledTextInput
-            control={form.control}
-            name="bundleId"
-            label={t('apps.create.bundle_id_label')}
-            placeholder={t('apps.create.bundle_id_placeholder')}
-            required
-          />
-
+       
           <ControlledTextInput
             control={form.control}
             name="name"
             label={t('apps.create.name_label')}
             placeholder={t('apps.create.name_placeholder')}
+            required
+          />
+
+<ControlledTextInput
+            control={form.control}
+            name="bundleId"
+            label={t('apps.create.bundle_id_label')}
+            placeholder={t('apps.create.bundle_id_placeholder')}
             required
           />
 
