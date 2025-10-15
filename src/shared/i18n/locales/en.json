@@ -324,7 +324,48 @@
       },
       "api_keys": {
         "title": "API Keys",
-        "coming_soon": "API Keys management coming soon"
+        "subtitle": "Manage API keys for build uploads",
+        "create_button": "Create API Key",
+        "no_keys": "No API keys created yet",
+        "create_first_key": "Create your first API key to enable build uploads",
+        "error_loading": "Failed to load API keys. Please try again.",
+        "table": {
+          "name": "Name",
+          "key_prefix": "Key",
+          "created_at": "Created",
+          "last_used": "Last Used",
+          "never_used": "Never used",
+          "actions": "Actions"
+        },
+        "create": {
+          "modal_title": "Create API Key",
+          "name_label": "Key Name",
+          "name_placeholder": "Enter a descriptive name for this key",
+          "submit_button": "Create Key",
+          "cancel_button": "Cancel",
+          "success_message": "API key created successfully",
+          "validation": {
+            "name_required": "Key name is required"
+          }
+        },
+        "created": {
+          "modal_title": "API Key Created",
+          "warning_title": "Important: Save this key now",
+          "warning_message": "This is the only time you will be able to see this key. Make sure to copy it and store it securely.",
+          "key_label": "Your API Key",
+          "copy_button": "Copy Key",
+          "copied": "Copied!",
+          "confirm_button": "I've saved the key",
+          "key_name": "Key Name"
+        },
+        "delete": {
+          "title": "Delete API Key",
+          "confirmation": "Are you sure you want to delete the API key '{{name}}'? This action cannot be undone and any builds using this key will fail.",
+          "confirm": "Delete",
+          "cancel": "Cancel",
+          "success_message": "API key deleted successfully",
+          "menu_item": "Delete key"
+        }
       }
     }
   }

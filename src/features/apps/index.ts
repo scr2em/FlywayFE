@@ -5,4 +5,6 @@ export { BuildsPage } from './ui/BuildsPage';
 export { AccessPage } from './ui/AccessPage';
 export { ApiKeysPage } from './ui/ApiKeysPage';
 export { CreateAppModal } from './ui/CreateAppModal';
+export { CreateApiKeyModal } from './ui/CreateApiKeyModal';
+export { ApiKeyCreatedModal } from './ui/ApiKeyCreatedModal';
 
