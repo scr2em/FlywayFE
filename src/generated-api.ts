@@ -326,6 +326,98 @@ export interface MobileApplicationResponse {
   updatedAt?: string;
 }
 
+/** Build information */
+export interface BuildResponse {
+  /** Unique UUID identifier for the build */
+  id: string;
+  /** Organization ID */
+  organizationId: string;
+  /** Bundle identifier for the mobile application */
+  bundleId: string;
+  /** Git commit hash (unique identifier) */
+  commitHash: string;
+  /** Git branch name */
+  branchName: string;
+  /** Git commit message */
+  commitMessage?: string;
+  /**
+   * Build file size in bytes
+   * @format int64
+   */
+  buildSize: number;
+  /** URL to download the build file */
+  buildUrl: string;
+  /** Native app version (e.g., "1.0.0") */
+  nativeVersion: string;
+  /** User ID who uploaded the build */
+  uploadedBy: string;
+  /**
+   * When the build was uploaded
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * When the build was last updated
+   * @format date-time
+   */
+  updatedAt?: string;
+}
+
+/** Paginated build response */
+export interface PaginatedBuildResponse {
+  /** Array of builds for this page */
+  data: BuildResponse[];
+  /** Current page number */
+  page: number;
+  /** Items per page */
+  size: number;
+  /** Total number of builds */
+  totalElements: number;
+  /** Total number of pages */
+  totalPages: number;
+}
+
+/** Request to create an API key */
+export interface CreateApiKeyRequest {
+  /** Name/description for the API key */
+  name: string;
+  /** Bundle ID of the mobile application */
+  bundleId: string;
+}
+
+/** API key information */
+export interface ApiKeyResponse {
+  /** Unique identifier for the API key */
+  id: string;
+  /** Name/description of the API key */
+  name: string;
+  /** The actual API key (only returned on creation) */
+  key?: string;
+  /** Masked key display (e.g., "flyw...xyz") */
+  keyPrefix: string;
+  /** Bundle ID this key is for */
+  bundleId: string;
+  /** Organization ID */
+  organizationId: string;
+  /** User ID who created the key */
+  createdBy: string;
+  /**
+   * When the key was last used
+   * @format date-time
+   */
+  lastUsedAt?: string;
+  /**
+   * When the key was created
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * When the key was last updated
+   * @format date-time
+   */
+  updatedAt?: string;
+}
+
 /** Permission information */
 export interface PermissionResponse {
   /** Permission code (e.g., "organization.update") */
@@ -1157,6 +1249,208 @@ export class Api<
         path: `/mobile-applications/${id}`,
         method: "DELETE",
         secure: true,
+        ...params,
+      }),
+  };
+  orgId = {
+    /**
+     * No description
+     *
+     * @tags Builds
+     * @name GetBuilds
+     * @summary Get builds with pagination and sorting
+     * @request GET:/{orgId}/{bundleId}/builds
+     * @secure
+     */
+    getBuilds: (
+      orgId: string,
+      bundleId: string,
+      query?: {
+        /**
+         * Page number (default 0)
+         * @default 0
+         */
+        page?: number;
+        /**
+         * Page size (default 20)
+         * @default 20
+         */
+        size?: number;
+        /**
+         * Sort direction by createdAt (default desc)
+         * @default "desc"
+         */
+        sort?: "asc" | "desc";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PaginatedBuildResponse, void | ErrorResponse>({
+        path: `/${orgId}/${bundleId}/builds`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description DEPRECATED: This endpoint has been removed. Use the API key-based upload endpoint at /v1/builds instead.
+     *
+     * @tags Builds
+     * @name UploadBuild
+     * @summary Upload a new build
+     * @request POST:/{orgId}/{bundleId}/builds
+     * @deprecated
+     * @secure
+     */
+    uploadBuild: (
+      orgId: string,
+      bundleId: string,
+      data: {
+        /** Git commit hash (unique identifier for the build) */
+        commitHash: string;
+        /** Git branch name */
+        branchName: string;
+        /** Git commit message */
+        commitMessage?: string;
+        /** Native app version (e.g., "1.0.0") */
+        nativeVersion: string;
+        /**
+         * The build file (APK/IPA, max 30MB)
+         * @format binary
+         */
+        file: File;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BuildResponse, void | ErrorResponse>({
+        path: `/${orgId}/${bundleId}/builds`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags API Keys
+     * @name GetApiKeys
+     * @summary Get all API keys for a bundle
+     * @request GET:/{orgId}/{bundleId}/api-keys
+     * @secure
+     */
+    getApiKeys: (orgId: string, bundleId: string, params: RequestParams = {}) =>
+      this.request<ApiKeyResponse[], ErrorResponse>({
+        path: `/${orgId}/${bundleId}/api-keys`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags API Keys
+     * @name CreateApiKey
+     * @summary Create a new API key
+     * @request POST:/{orgId}/{bundleId}/api-keys
+     * @secure
+     */
+    createApiKey: (
+      orgId: string,
+      bundleId: string,
+      query: {
+        /** Name/description for the API key */
+        name: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ApiKeyResponse, void | ErrorResponse>({
+        path: `/${orgId}/${bundleId}/api-keys`,
+        method: "POST",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags API Keys
+     * @name DeleteApiKey
+     * @summary Delete an API key
+     * @request DELETE:/{orgId}/{bundleId}/api-keys/{keyId}
+     * @secure
+     */
+    deleteApiKey: (
+      orgId: string,
+      bundleId: string,
+      keyId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, ErrorResponse>({
+        path: `/${orgId}/${bundleId}/api-keys/${keyId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+  };
+  builds = {
+    /**
+     * No description
+     *
+     * @tags Builds
+     * @name DeleteBuild
+     * @summary Delete a build by its UUID
+     * @request DELETE:/builds/{buildId}
+     * @secure
+     */
+    deleteBuild: (buildId: string, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/builds/${buildId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+  };
+  v1 = {
+    /**
+     * @description Upload builds using API key authentication. This is the only way to upload builds and is designed for CI/CD pipelines. Requires X-API-Key header instead of JWT token.
+     *
+     * @tags Builds, API Keys
+     * @name UploadBuildWithApiKey
+     * @summary Upload a new build using API key authentication
+     * @request POST:/v1/builds
+     */
+    uploadBuildWithApiKey: (
+      data: {
+        /** Git commit hash (unique identifier for the build) */
+        commitHash: string;
+        /** Git branch name */
+        branchName: string;
+        /** Git commit message */
+        commitMessage?: string;
+        /** Native app version (e.g., "1.0.0") */
+        nativeVersion: string;
+        /**
+         * The build file (APK/IPA, max 30MB)
+         * @format binary
+         */
+        file: File;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BuildResponse, void | ErrorResponse>({
+        path: `/v1/builds`,
+        method: "POST",
+        body: data,
+        type: ContentType.FormData,
+        format: "json",
         ...params,
       }),
   };
