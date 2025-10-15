@@ -1,4 +1,4 @@
-import { Loader, MultiSelect, type MultiSelectProps } from "@mantine/core";
+import {  MultiSelect, type MultiSelectProps } from "@mantine/core";
 import {
 	type Control,
 	Controller,
@@ -6,7 +6,6 @@ import {
 	type Path,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { usePermissionsQuery } from "../api/queries/role";
 
 
 export function ControlledMultiSelect<
@@ -39,46 +38,6 @@ export function ControlledMultiSelect<
 					/>
 				);
 			}}
-		/>
-	);
-}
-
-
-
-export function ControlledPermissionsMultiSelect<FormValues extends FieldValues>(
-	props: MultiSelectProps & {
-		control: Control<FormValues>;
-		name: Path<FormValues>;
-	},
-) {
-	const { control, name, ...rest } = props;
-	const {
-		data: permissions,
-		isPending,
-		isError,
-	} = usePermissionsQuery();
-
-
-
-	if(isPending ) {
-		return <Loader />;
-	}
-	if (isError) {
-		return <>error fetching permissions</>;
-	}
-	const options = permissions.map((permission) => ({
-		value: permission.code,
-		label: permission.name,
-	})) 
-
-	return (
-		<ControlledMultiSelect
-			control={control}
-			name={name}
-			disabled={isPending}
-			options={options}
-			{...rest}
-
 		/>
 	);
 }

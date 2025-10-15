@@ -1,12 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { TextInput, Button, Stack, Textarea } from '@mantine/core';
+import {  Button, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { Building2 } from 'lucide-react';
 import { createOrganizationSchema, type CreateOrganizationFormData } from '../model/schema';
 import { useCreateOrganizationMutation } from '../../../../shared/api/queries';
 import { useNavigate } from 'react-router';
+import { ControlledTextInput } from '../../../../shared/controlled-form-fields/ControlledTextInput';
 
 export function CreateOrganizationForm() {
   const { t } = useTranslation();
@@ -14,9 +15,8 @@ export function CreateOrganizationForm() {
   const createOrgMutation = useCreateOrganizationMutation();
 
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors },
   } = useForm<CreateOrganizationFormData>({
     resolver: zodResolver(createOrganizationSchema),
   });
@@ -43,23 +43,14 @@ export function CreateOrganizationForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack gap="md">
-        <TextInput
-          label={t('organization.create.name_label')}
-          placeholder={t('organization.create.name_placeholder')}
-          leftSection={<Building2 size={18} />}
-          size="md"
-          {...register('name')}
-          error={errors.name?.message ? t(errors.name.message) : undefined}
-        />
-
-        <Textarea
-          label={t('organization.create.description_label')}
-          placeholder={t('organization.create.description_placeholder')}
-          size="md"
-          minRows={4}
-          {...register('description')}
-          error={errors.description?.message ? t(errors.description.message) : undefined}
-        />
+      <ControlledTextInput
+        control={control}
+        name="name"
+        label={t('organization.create.name_label')}
+        placeholder={t('organization.create.name_placeholder')}
+        leftSection={<Building2 size={18} />}
+        size="md"
+      />
 
         <Button
           type="submit"

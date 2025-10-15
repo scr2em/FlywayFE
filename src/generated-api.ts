@@ -75,28 +75,12 @@ export interface UpdateOrganizationRequest {
   description?: string;
 }
 
-/** Request to create a new role */
-export interface CreateRoleRequest {
-  /** Role name */
-  name: string;
-  /** Role description */
-  description?: string;
-  /** List of permission codes */
-  permissionCodes?: string[];
-}
-
-/** Request to update a role */
-export interface UpdateRoleRequest {
-  /** Role name */
-  name?: string;
-  /** Role description */
-  description?: string;
-  /** List of permission codes */
-  permissionCodes?: string[];
-}
-
 /** Request to create an invitation */
 export interface CreateInvitationRequest {
+  /** First name of the invited user */
+  firstName: string;
+  /** Last name of the invited user */
+  lastName: string;
   /**
    * Email of the invited user
    * @format email
@@ -104,12 +88,6 @@ export interface CreateInvitationRequest {
   email: string;
   /** Role ID */
   roleId: string;
-}
-
-/** Request to respond to an invitation */
-export interface RespondToInvitationRequest {
-  /** Whether to accept or reject the invitation */
-  accept: boolean;
 }
 
 /** Request to add a member to an organization */
@@ -156,6 +134,8 @@ export interface UserResponse {
   status: UserStatusResponse;
   /** Organization information (null if user is not in an organization) */
   organization?: UserOrganizationResponse | null;
+  /** Invitation status (null for organization owners who were not invited) */
+  invitationStatus?: InvitationStatusResponse | null;
   /**
    * When the user was created
    * @format date-time
@@ -194,14 +174,6 @@ export interface AuthResponse {
   user: UserResponse;
 }
 
-/** Refresh token response */
-export interface RefreshTokenResponse {
-  /** New JWT access token */
-  accessToken: string;
-  /** New refresh token */
-  refreshToken: string;
-}
-
 /** Organization information */
 export interface OrganizationResponse {
   /** Organization ID */
@@ -222,7 +194,7 @@ export interface OrganizationResponse {
   updatedAt?: string;
 }
 
-/** Role information */
+/** Role information (roles are now global across all organizations) */
 export interface RoleResponse {
   /** Role ID */
   id: string;
@@ -230,12 +202,8 @@ export interface RoleResponse {
   name: string;
   /** Role description */
   description?: string;
-  /** Organization ID */
-  organizationId: string;
-  /** Whether this is a system role */
-  isSystemRole: boolean;
-  /** List of permissions */
-  permissions?: PermissionResponse[];
+  /** Bitwise permissions value as a string (e.g., "12345") */
+  permissionsValue: string;
   /**
    * When the role was created
    * @format date-time
@@ -246,20 +214,6 @@ export interface RoleResponse {
    * @format date-time
    */
   updatedAt?: string;
-}
-
-/** Permission information */
-export interface PermissionResponse {
-  /** Permission code */
-  code: string;
-  /** Permission name */
-  name: string;
-  /** Permission description */
-  description?: string;
-  /** Resource name */
-  resource: string;
-  /** Action name */
-  action: string;
 }
 
 /** Invitation information */
@@ -273,7 +227,7 @@ export interface InvitationResponse {
   email: string;
   /** Organization information */
   organization: OrganizationResponse;
-  /** Role information */
+  /** Role information (roles are now global across all organizations) */
   role: RoleResponse;
   /** Invitation status information */
   status: InvitationStatusResponse;
@@ -305,7 +259,7 @@ export interface OrganizationMemberResponse {
   id: string;
   /** User information */
   user: UserResponse;
-  /** Role information */
+  /** Role information (roles are now global across all organizations) */
   role: RoleResponse;
   /**
    * When the member joined
@@ -779,11 +733,11 @@ export class Api<
   };
   roles = {
     /**
-     * No description
+     * @description Returns all global roles that can be assigned to organization members
      *
      * @tags Roles
      * @name GetRoles
-     * @summary Get all roles in organization
+     * @summary Get all available roles
      * @request GET:/roles
      * @secure
      */
@@ -795,162 +749,10 @@ export class Api<
         format: "json",
         ...params,
       }),
-
-    /**
-     * No description
-     *
-     * @tags Roles
-     * @name CreateRole
-     * @summary Create a new role
-     * @request POST:/roles
-     * @secure
-     */
-    createRole: (data: CreateRoleRequest, params: RequestParams = {}) =>
-      this.request<RoleResponse, ErrorResponse>({
-        path: `/roles`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Roles
-     * @name GetRoleById
-     * @summary Get role by ID
-     * @request GET:/roles/{id}
-     * @secure
-     */
-    getRoleById: (id: string, params: RequestParams = {}) =>
-      this.request<RoleResponse, ErrorResponse>({
-        path: `/roles/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Roles
-     * @name UpdateRole
-     * @summary Update role
-     * @request PUT:/roles/{id}
-     * @secure
-     */
-    updateRole: (
-      id: string,
-      data: UpdateRoleRequest,
-      params: RequestParams = {},
-    ) =>
-      this.request<RoleResponse, ErrorResponse>({
-        path: `/roles/${id}`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Roles
-     * @name DeleteRole
-     * @summary Delete role
-     * @request DELETE:/roles/{id}
-     * @secure
-     */
-    deleteRole: (id: string, params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/roles/${id}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-  };
-  permissions = {
-    /**
-     * No description
-     *
-     * @tags Permissions
-     * @name GetAllPermissions
-     * @summary Get all permissions
-     * @request GET:/permissions
-     * @secure
-     */
-    getAllPermissions: (params: RequestParams = {}) =>
-      this.request<PermissionResponse[], ErrorResponse>({
-        path: `/permissions`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Permissions
-     * @name GetPermissionByCode
-     * @summary Get permission by code
-     * @request GET:/permissions/{code}
-     * @secure
-     */
-    getPermissionByCode: (code: string, params: RequestParams = {}) =>
-      this.request<PermissionResponse, ErrorResponse>({
-        path: `/permissions/${code}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Permissions
-     * @name GetPermissionsByCategory
-     * @summary Get permissions by category
-     * @request GET:/permissions/category/{category}
-     * @secure
-     */
-    getPermissionsByCategory: (category: string, params: RequestParams = {}) =>
-      this.request<PermissionResponse[], ErrorResponse>({
-        path: `/permissions/category/${category}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
   };
   invitations = {
     /**
-     * No description
-     *
-     * @tags Invitations
-     * @name GetInvitationsByOrganization
-     * @summary Get all invitations for organization
-     * @request GET:/invitations
-     * @secure
-     */
-    getInvitationsByOrganization: (params: RequestParams = {}) =>
-      this.request<InvitationResponse[], ErrorResponse>({
-        path: `/invitations`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
+     * @description Create an invitation to add a new member to the organization - requires invitation.create permission
      *
      * @tags Invitations
      * @name CreateInvitation
@@ -973,95 +775,66 @@ export class Api<
       }),
 
     /**
-     * No description
-     *
-     * @tags Invitations
-     * @name GetInvitationById
-     * @summary Get invitation by ID
-     * @request GET:/invitations/{id}
-     * @secure
-     */
-    getInvitationById: (id: string, params: RequestParams = {}) =>
-      this.request<InvitationResponse, ErrorResponse>({
-        path: `/invitations/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Invitations
-     * @name DeleteInvitation
-     * @summary Delete invitation
-     * @request DELETE:/invitations/{id}
-     * @secure
-     */
-    deleteInvitation: (id: string, params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/invitations/${id}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
+     * @description Public endpoint to retrieve invitation details by token
      *
      * @tags Invitations
      * @name GetInvitationByToken
-     * @summary Get invitation by token
+     * @summary Get invitation by token (public endpoint)
      * @request GET:/invitations/token/{token}
-     * @secure
      */
     getInvitationByToken: (token: string, params: RequestParams = {}) =>
       this.request<InvitationResponse, ErrorResponse>({
         path: `/invitations/token/${token}`,
         method: "GET",
-        secure: true,
         format: "json",
         ...params,
       }),
 
     /**
-     * No description
+     * @description Public endpoint to accept an invitation
      *
      * @tags Invitations
-     * @name RespondToInvitation
-     * @summary Respond to invitation (accept or reject)
-     * @request POST:/invitations/token/{token}/respond
-     * @secure
+     * @name AcceptInvitation
+     * @summary Accept invitation (public endpoint)
+     * @request POST:/invitations/token/{token}/accept
      */
-    respondToInvitation: (
-      token: string,
-      data: RespondToInvitationRequest,
-      params: RequestParams = {},
-    ) =>
+    acceptInvitation: (token: string, params: RequestParams = {}) =>
       this.request<InvitationResponse, ErrorResponse>({
-        path: `/invitations/token/${token}/respond`,
+        path: `/invitations/token/${token}/accept`,
         method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
 
     /**
-     * No description
+     * @description Public endpoint to reject an invitation
      *
      * @tags Invitations
-     * @name GetMyInvitations
-     * @summary Get invitations sent to current user
-     * @request GET:/invitations/my-invitations
+     * @name RejectInvitation
+     * @summary Reject invitation (public endpoint)
+     * @request POST:/invitations/token/{token}/reject
+     */
+    rejectInvitation: (token: string, params: RequestParams = {}) =>
+      this.request<InvitationResponse, ErrorResponse>({
+        path: `/invitations/token/${token}/reject`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description Resend an invitation by user ID - requires invitation.create permission
+     *
+     * @tags Invitations
+     * @name ResendInvitation
+     * @summary Resend invitation (private endpoint)
+     * @request POST:/invitations/users/{userId}/resend
      * @secure
      */
-    getMyInvitations: (params: RequestParams = {}) =>
-      this.request<InvitationResponse[], ErrorResponse>({
-        path: `/invitations/my-invitations`,
-        method: "GET",
+    resendInvitation: (userId: string, params: RequestParams = {}) =>
+      this.request<InvitationResponse, ErrorResponse>({
+        path: `/invitations/users/${userId}/resend`,
+        method: "POST",
         secure: true,
         format: "json",
         ...params,

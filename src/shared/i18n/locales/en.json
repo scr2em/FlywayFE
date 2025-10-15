@@ -75,7 +75,8 @@
     "last_name_required": "Last name is required",
     "organization_name_required": "Organization name is required",
     "role_name_required": "Role name is required",
-    "organization_id_required": "Organization ID is required"
+    "organization_id_required": "Organization ID is required",
+    "role_required": "Role is required"
   },
   "common": {
     "loading": "Loading...",
@@ -85,7 +86,10 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
-    "projects": "Projects",
+    "apps": "Apps",
+    "live_updates": "Live Updates",
+    "bundles": "Bundles",
+    "builds": "Builds",
     "team": "Team",
     "roles": "Roles",
     "analytics": "Analytics",
@@ -106,14 +110,17 @@
     "you": "(You)",
     "load_more": "Load More Members",
     "loading_more": "Loading...",
-    "total_members": "Total Members",
     "loaded_members": "Loaded Members",
+    "resend_invitation": "Resend Invitation",
+    "resend_success": "Invitation resent successfully",
+    "resend_error": "Failed to resend invitation. Please try again.",
     "table": {
       "member": "Member",
       "email": "Email",
       "role": "Role",
       "status": "Status",
-      "joined": "Joined"
+      "joined": "Joined",
+      "actions": "Actions"
     }
   },
   "role": {
@@ -163,6 +170,43 @@
       "created": "Created",
       "actions": "Actions"
     }
+  },
+  "permissions_calculator": {
+    "title": "Permissions Calculator",
+    "subtitle": "Convert between permission strings and individual permissions",
+    "permission_string_label": "Permission String",
+    "permission_string_placeholder": "Enter permission string (e.g., 12345)",
+    "copy": "Copy to clipboard",
+    "copied": "Copied!",
+    "enabled_count": "{{count}} of {{total}} permissions enabled",
+    "permissions_count": "permissions",
+    "enabled": "enabled",
+    "bit_value": "Bit value",
+    "categories": {
+      "organization": "Organization",
+      "member": "Member Management",
+      "role": "Role Management",
+      "permission": "Permission Management",
+      "invitation": "Invitation Management",
+      "user": "User Management",
+      "deployment": "Deployment",
+      "billing": "Billing"
+    }
+  },
+  "invitation": {
+    "modal_title": "Invite Team Member",
+    "first_name_label": "First Name",
+    "first_name_placeholder": "Enter first name",
+    "last_name_label": "Last Name",
+    "last_name_placeholder": "Enter last name",
+    "email_label": "Email",
+    "email_placeholder": "Enter email address",
+    "role_label": "Role",
+    "role_placeholder": "Select a role",
+    "submit_button": "Send Invitation",
+    "cancel_button": "Cancel",
+    "success_message": "Invitation sent successfully",
+    "error_generic": "Failed to send invitation. Please try again."
   }
 }
 

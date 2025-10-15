@@ -14,6 +14,9 @@ import {
   Folder,
   BarChart,
   Shield,
+  Radio,
+  Package,
+  Boxes,
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';
@@ -44,8 +47,24 @@ export function AppLayout() {
     },
     {
       icon: Folder,
-      label: t('navigation.projects'),
-      path: '/projects',
+      label: t('navigation.apps'),
+      path: '/apps',
+    },
+    {
+      icon: Radio,
+      label: t('navigation.live_updates'),
+      children: [
+        {
+          icon: Package,
+          label: t('navigation.bundles'),
+          path: '/bundles',
+        },
+        {
+          icon: Boxes,
+          label: t('navigation.builds'),
+          path: '/builds',
+        },
+      ],
     },
     {
       icon: Users,
@@ -171,8 +190,43 @@ export function AppLayout() {
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollArea}>
           <Box>
-            {navigationItems.map((item) => {
+            {navigationItems.map((item, index) => {
               const Icon = item.icon;
+              
+              if (item.children) {
+                const isChildActive = item.children.some(
+                  (child) => location.pathname === child.path
+                );
+                
+                return (
+                  <NavLink
+                    key={`parent-${index}`}
+                    label={item.label}
+                    leftSection={<Icon size={20} />}
+                    childrenOffset={28}
+                    mb="xs"
+                    defaultOpened={isChildActive}
+                    style={{ borderRadius: 'var(--mantine-radius-md)' }}
+                  >
+                    {item.children.map((child) => {
+                      const ChildIcon = child.icon;
+                      const isActive = location.pathname === child.path;
+                      
+                      return (
+                        <NavLink
+                          key={child.path}
+                          label={child.label}
+                          leftSection={<ChildIcon size={18} />}
+                          active={isActive}
+                          onClick={() => navigate(child.path)}
+                          style={{ borderRadius: 'var(--mantine-radius-md)' }}
+                        />
+                      );
+                    })}
+                  </NavLink>
+                );
+              }
+              
               const isActive = location.pathname === item.path;
               
               return (

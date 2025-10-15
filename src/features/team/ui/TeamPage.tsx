@@ -13,14 +13,23 @@ import {
   Table,
   Alert,
   ScrollArea,
+  ActionIcon,
+  Tooltip,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, UserPlus } from 'lucide-react';
+import { AlertCircle, UserPlus, MailPlus } from 'lucide-react';
+import { useState } from 'react';
+import { notifications } from '@mantine/notifications';
 import { useOrganizationMembersQuery } from '../../../shared/api/queries/organization';
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
+import { InviteUserModal } from '../../invitation';
+import { useResendInvitationMutation } from '../../../shared/api/queries/invitation';
+import { useShowBackendError } from '../../../shared/hooks';
 
 export function TeamPage() {
   const { t } = useTranslation();
+  const [inviteModalOpened, setInviteModalOpened] = useState(false);
+  const [resendingInvitationId, setResendingUserId] = useState<string | null>(null);
   const { data: currentUser, isLoading: isLoadingUser } = useCurrentUserQuery();
   const {
     data,
@@ -30,6 +39,25 @@ export function TeamPage() {
     isLoading,
     isError,
   } = useOrganizationMembersQuery();
+  
+  const resendInvitationMutation = useResendInvitationMutation();
+  const { showError } = useShowBackendError();
+
+  const handleResendInvitation = async (userId: string) => {
+    setResendingUserId(userId);
+    try {
+      await resendInvitationMutation.mutateAsync(userId);
+      notifications.show({
+        title: t('common.success'),
+        message: t('team.resend_success'),
+        color: 'green',
+      });
+    } catch (error) {
+      showError(error);
+    } finally {
+      setResendingUserId(null);
+    }
+  };
 
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
@@ -119,6 +147,7 @@ export function TeamPage() {
             leftSection={<UserPlus size={18} />}
             variant="gradient"
             gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+            onClick={() => setInviteModalOpened(true)}
           >
             {t('team.invite_member')}
           </Button>
@@ -135,6 +164,7 @@ export function TeamPage() {
                   <Table.Th>{t('team.table.role')}</Table.Th>
                   <Table.Th>{t('team.table.status')}</Table.Th>
                   <Table.Th>{t('team.table.joined')}</Table.Th>
+                  <Table.Th>{t('team.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -189,6 +219,20 @@ export function TeamPage() {
                         })}
                       </Text>
                     </Table.Td>
+                    <Table.Td>
+                      {member.user.invitationStatus?.status === 'pending' && (
+                        <Tooltip label={t('team.resend_invitation')}>
+                          <ActionIcon
+                            variant="subtle"
+                            color="blue"
+                            onClick={() => handleResendInvitation(member.user.id)}
+                            loading={resendingInvitationId === member.user.invitationStatus!.id}
+                          >
+                            <MailPlus size={18} />
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                    </Table.Td>
                   </Table.Tr>
                 ))}
               </Table.Tbody>
@@ -213,28 +257,12 @@ export function TeamPage() {
           )}
         </Card>
 
-        {/* Summary Card */}
-        <Card withBorder shadow="sm" p="lg" radius="md">
-          <Group justify="space-between">
-            <Box>
-              <Text size="sm" c="dimmed" fw={700} tt="uppercase">
-                {t('team.total_members')}
-              </Text>
-              <Text fw={700} size="xl">
-                {totalMembers}
-              </Text>
-            </Box>
-            <Box>
-              <Text size="sm" c="dimmed" fw={700} tt="uppercase">
-                {t('team.loaded_members')}
-              </Text>
-              <Text fw={700} size="xl">
-                {allMembers.length}
-              </Text>
-            </Box>
-          </Group>
-        </Card>
       </Stack>
+
+      <InviteUserModal
+        opened={inviteModalOpened}
+        onClose={() => setInviteModalOpened(false)}
+      />
     </Box>
   );
 }

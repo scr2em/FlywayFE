@@ -6,6 +6,7 @@ import {
 	type Path,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useRolesQuery } from "../api/queries/role";
 
 
 export function ControlledSelect<
@@ -40,3 +41,32 @@ export function ControlledSelect<
 	);
 }
 
+export function ControlledRolesSelect<FormValues extends FieldValues>(
+	props: SelectProps & {
+		control: Control<FormValues>;
+		name: Path<FormValues>;
+	},
+) {
+	const { control, name, ...rest } = props;
+	const { data: roles, isPending: isLoadingRoles, isError } = useRolesQuery();
+
+	if (isLoadingRoles) {
+		return <>loading roles</>;
+	}
+	if (isError) {
+		return <>error fetching roles</>;
+	}
+
+	const options = roles?.map((role) => ({
+		value: role.id,
+		label: role.name,
+	}));
+	return (
+		<ControlledSelect
+			control={control}
+			name={name}
+			options={options}
+			{...rest}
+		/>
+	);
+}
