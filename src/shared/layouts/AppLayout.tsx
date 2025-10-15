@@ -12,14 +12,14 @@ import {
   Bell,
   Menu as MenuIcon,
   Folder,
-  BarChart,
-  Shield,
   Radio,
   Package,
   Boxes,
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';
+import { useUserPermissions } from '../hooks';
+import { hasPermission } from '../../features/permissions-calculator';
 
 export function AppLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -27,6 +27,7 @@ export function AppLayout() {
   const { t } = useTranslation();
   const { logout } = useAuth();
   const { data: user } = useCurrentUserQuery();
+  const { permissionsValue } = useUserPermissions();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,25 +45,30 @@ export function AppLayout() {
       icon: LayoutDashboard,
       label: t('navigation.dashboard'),
       path: '/dashboard',
+      permission: null, // Dashboard is accessible to all
     },
     {
       icon: Folder,
       label: t('navigation.apps'),
       path: '/apps',
+      permission: 'mobile_app.read',
     },
     {
       icon: Radio,
       label: t('navigation.live_updates'),
+      permission: 'deployment.view',
       children: [
         {
           icon: Package,
           label: t('navigation.bundles'),
           path: '/bundles',
+          permission: 'deployment.view',
         },
         {
           icon: Boxes,
           label: t('navigation.builds'),
           path: '/builds',
+          permission: 'deployment.view',
         },
       ],
     },
@@ -70,24 +76,31 @@ export function AppLayout() {
       icon: Users,
       label: t('navigation.team'),
       path: '/team',
-    },
-
-    {
-      icon: BarChart,
-      label: t('navigation.analytics'),
-      path: '/analytics',
+      permission: 'member.view',
     },
     {
       icon: Building,
       label: t('navigation.organization'),
       path: '/organization',
-    },
-    {
-      icon: Settings,
-      label: t('navigation.settings'),
-      path: '/settings',
+      permission: null, // Organization view is accessible to all members
     },
   ];
+
+  // Filter navigation items based on user permissions
+  const visibleNavigationItems = navigationItems.filter((item) => {
+    if (!item.permission) return true; // No permission required
+    return hasPermission(permissionsValue, item.permission);
+  }).map((item) => {
+    // Filter children if item has children
+    if (item.children) {
+      const visibleChildren = item.children.filter((child) => {
+        if (!child.permission) return true;
+        return hasPermission(permissionsValue, child.permission);
+      });
+      return { ...item, children: visibleChildren };
+    }
+    return item;
+  });
 
   return (
     <AppShell
@@ -186,7 +199,7 @@ export function AppLayout() {
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollArea}>
           <Box>
-            {navigationItems.map((item, index) => {
+            {visibleNavigationItems.map((item, index) => {
               const Icon = item.icon;
               
               if (item.children) {

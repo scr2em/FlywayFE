@@ -26,7 +26,7 @@ import { useOrganizationMembersQuery, useRemoveMemberMutation } from '../../../s
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
 import { InviteUserModal } from '../../invitation';
 import { useResendInvitationMutation } from '../../../shared/api/queries/invitation';
-import { useShowBackendError } from '../../../shared/hooks';
+import { useShowBackendError, usePermission } from '../../../shared/hooks';
 
 export function TeamPage() {
   const { t } = useTranslation();
@@ -45,6 +45,8 @@ export function TeamPage() {
   const resendInvitationMutation = useResendInvitationMutation();
   const removeMemberMutation = useRemoveMemberMutation();
   const { showError } = useShowBackendError();
+  const { hasPermission: canInviteMembers } = usePermission('invitation.create');
+  const { hasPermission: canRemoveMembers } = usePermission('member.remove');
 
   const handleResendInvitation = async (userId: string) => {
     setResendingUserId(userId);
@@ -186,14 +188,16 @@ export function TeamPage() {
               {t('team.subtitle', { count: totalMembers })}
             </Text>
           </Box>
-          <Button
-            leftSection={<UserPlus size={18} />}
-            variant="gradient"
-            gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
-            onClick={() => setInviteModalOpened(true)}
-          >
-            {t('team.invite_member')}
-          </Button>
+          {canInviteMembers && (
+            <Button
+              leftSection={<UserPlus size={18} />}
+              variant="gradient"
+              gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+              onClick={() => setInviteModalOpened(true)}
+            >
+              {t('team.invite_member')}
+            </Button>
+          )}
         </Group>
 
         {/* Members Table */}
@@ -293,23 +297,25 @@ export function TeamPage() {
                       </Text>
                     </Table.Td>
                     <Table.Td>
-                      <Menu shadow="md" width={200} position="bottom-end">
-                        <Menu.Target>
-                          <ActionIcon variant="subtle" color="gray">
-                            <MoreVertical size={18} />
-                          </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          <Menu.Item
-                            color="red"
-                            leftSection={<Trash2 size={16} />}
-                            onClick={() => handleDeleteMember(member.id, `${member.user.firstName} ${member.user.lastName}`)}
-                            disabled={member.user.id === currentUser.id}
-                          >
-                            {t('team.delete.menu_item')}
-                          </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
+                      {canRemoveMembers && (
+                        <Menu shadow="md" width={200} position="bottom-end">
+                          <Menu.Target>
+                            <ActionIcon variant="subtle" color="gray">
+                              <MoreVertical size={18} />
+                            </ActionIcon>
+                          </Menu.Target>
+                          <Menu.Dropdown>
+                            <Menu.Item
+                              color="red"
+                              leftSection={<Trash2 size={16} />}
+                              onClick={() => handleDeleteMember(member.id, `${member.user.firstName} ${member.user.lastName}`)}
+                              disabled={member.user.id === currentUser.id}
+                            >
+                              {t('team.delete.menu_item')}
+                            </Menu.Item>
+                          </Menu.Dropdown>
+                        </Menu>
+                      )}
                     </Table.Td>
                   </Table.Tr>
                 ))}

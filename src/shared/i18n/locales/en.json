@@ -64,7 +64,29 @@
       "submit_button": "Create Organization",
       "success_message": "Organization created successfully",
       "error_generic": "Failed to create organization. Please try again."
-    }
+    },
+    "view": {
+      "title": "Organization Settings",
+      "subtitle": "View and manage your organization details",
+      "name_label": "Organization Name",
+      "description_label": "Description",
+      "created_at": "Created",
+      "updated_at": "Last Updated"
+    },
+    "edit": {
+      "edit_button": "Edit Organization",
+      "name_label": "Organization Name",
+      "name_placeholder": "Enter organization name",
+      "description_label": "Description (Optional)",
+      "description_placeholder": "Tell us about your organization",
+      "submit_button": "Save Changes",
+      "cancel_button": "Cancel",
+      "success_message": "Organization updated successfully",
+      "error_generic": "Failed to update organization. Please try again."
+    },
+    "no_organization_title": "No Organization",
+    "no_organization_message": "You need to be part of an organization to view this page.",
+    "error_loading": "Failed to load organization details. Please try again."
   },
   "validation": {
     "email_required": "Email is required",

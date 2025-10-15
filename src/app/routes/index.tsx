@@ -3,6 +3,7 @@ import { LoginPage } from '../../features/auth/login';
 import { SignupPage } from '../../features/auth/signup';
 import { DashboardPage } from '../../features/dashboard';
 import { CreateOrganizationPage } from '../../features/organization/create-organization';
+import { OrganizationPage } from '../../features/organization/view-organization';
 import { TeamPage } from '../../features/team';
 import { AppsPage } from '../../features/apps';
 import { PermissionsCalculatorPage } from '../../features/permissions-calculator';
@@ -60,7 +61,7 @@ export function AppRoutes() {
         <Route path="/apps" element={<AppsPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/analytics" element={<div>Analytics Page (Coming Soon)</div>} />
-        <Route path="/organization" element={<div>Organization Page (Coming Soon)</div>} />
+        <Route path="/organization" element={<OrganizationPage />} />
         <Route path="/settings" element={<div>Settings Page (Coming Soon)</div>} />
         <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
       </Route>

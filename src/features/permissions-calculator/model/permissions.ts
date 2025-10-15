@@ -183,6 +183,36 @@ export const PERMISSIONS: PermissionDefinition[] = [
     category: 'billing',
     bitValue: 1n << 23n,
   },
+
+  // Mobile Application permissions (bits 24-27)
+  {
+    code: 'mobile_app.read',
+    label: 'View Mobile Apps',
+    description: 'Can view mobile applications',
+    category: 'mobile_app',
+    bitValue: 1n << 24n,
+  },
+  {
+    code: 'mobile_app.create',
+    label: 'Create Mobile Apps',
+    description: 'Can create new mobile applications',
+    category: 'mobile_app',
+    bitValue: 1n << 25n,
+  },
+  {
+    code: 'mobile_app.update',
+    label: 'Update Mobile Apps',
+    description: 'Can update mobile applications',
+    category: 'mobile_app',
+    bitValue: 1n << 26n,
+  },
+  {
+    code: 'mobile_app.delete',
+    label: 'Delete Mobile Apps',
+    description: 'Can delete mobile applications',
+    category: 'mobile_app',
+    bitValue: 1n << 27n,
+  },
 ];
 
 /**
@@ -244,4 +274,50 @@ export function getPermissionByCode(code: string): PermissionDefinition | undefi
   return PERMISSIONS.find((p) => p.code === code);
 }
 
+/**
+ * Check if a permission string contains a specific permission
+ * @param permissionString - The bitwise permissions value as a string
+ * @param permissionCode - The permission code to check (e.g., "organization.update")
+ * @returns true if the permission is present, false otherwise
+ */
+export function hasPermission(permissionString: string | undefined | null, permissionCode: string): boolean {
+  if (!permissionString) {
+    return false;
+  }
+
+  try {
+    const permissionValue = BigInt(permissionString);
+    const permission = getPermissionByCode(permissionCode);
+    
+    if (!permission) {
+      console.warn(`Unknown permission code: ${permissionCode}`);
+      return false;
+    }
+
+    return (permissionValue & permission.bitValue) === permission.bitValue;
+  } catch (error) {
+    console.error('Invalid permission string:', error);
+    return false;
+  }
+}
+
+/**
+ * Check if a permission string contains any of the specified permissions
+ * @param permissionString - The bitwise permissions value as a string
+ * @param permissionCodes - Array of permission codes to check
+ * @returns true if any of the permissions are present, false otherwise
+ */
+export function hasAnyPermission(permissionString: string | undefined | null, permissionCodes: string[]): boolean {
+  return permissionCodes.some(code => hasPermission(permissionString, code));
+}
+
+/**
+ * Check if a permission string contains all of the specified permissions
+ * @param permissionString - The bitwise permissions value as a string
+ * @param permissionCodes - Array of permission codes to check
+ * @returns true if all permissions are present, false otherwise
+ */
+export function hasAllPermissions(permissionString: string | undefined | null, permissionCodes: string[]): boolean {
+  return permissionCodes.every(code => hasPermission(permissionString, code));
+}
 

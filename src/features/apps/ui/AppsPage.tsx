@@ -24,7 +24,7 @@ import {
   useDeleteMobileAppMutation,
 } from '../../../shared/api/queries';
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
-import { useShowBackendError } from '../../../shared/hooks';
+import { useShowBackendError, usePermission } from '../../../shared/hooks';
 import { CreateAppModal } from './CreateAppModal';
 
 export function AppsPage() {
@@ -34,6 +34,8 @@ export function AppsPage() {
   const { data: apps, isLoading, isError } = useMobileAppsQuery();
   const deleteAppMutation = useDeleteMobileAppMutation();
   const { showError } = useShowBackendError();
+  const { hasPermission: canCreateApp } = usePermission('mobile_app.create');
+  const { hasPermission: canDeleteApp } = usePermission('mobile_app.delete');
 
   const handleDeleteApp = (appId: string, appName: string) => {
     modals.openConfirmModal({
@@ -111,14 +113,16 @@ export function AppsPage() {
               {t('apps.subtitle', { count: appsList.length })}
             </Text>
           </Box>
-          <Button
-            leftSection={<Plus size={18} />}
-            variant="gradient"
-            gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
-            onClick={() => setCreateModalOpened(true)}
-          >
-            {t('apps.create_button')}
-          </Button>
+          {canCreateApp && (
+            <Button
+              leftSection={<Plus size={18} />}
+              variant="gradient"
+              gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+              onClick={() => setCreateModalOpened(true)}
+            >
+              {t('apps.create_button')}
+            </Button>
+          )}
         </Group>
 
         {/* Apps Grid */}
@@ -130,12 +134,14 @@ export function AppsPage() {
                 <Text c="dimmed" size="lg">
                   {t('apps.no_apps')}
                 </Text>
-                <Button
-                  leftSection={<Plus size={18} />}
-                  onClick={() => setCreateModalOpened(true)}
-                >
-                  {t('apps.create_first_app')}
-                </Button>
+                {canCreateApp && (
+                  <Button
+                    leftSection={<Plus size={18} />}
+                    onClick={() => setCreateModalOpened(true)}
+                  >
+                    {t('apps.create_first_app')}
+                  </Button>
+                )}
               </Stack>
             </Center>
           </Card>
@@ -168,22 +174,24 @@ export function AppsPage() {
                       </Badge>
                     </Box>
                     
-                    <Menu shadow="md" width={200} position="bottom-end">
-                      <Menu.Target>
-                        <ActionIcon variant="subtle" color="gray">
-                          <MoreVertical size={18} />
-                        </ActionIcon>
-                      </Menu.Target>
-                      <Menu.Dropdown>
-                        <Menu.Item
-                          color="red"
-                          leftSection={<Trash2 size={16} />}
-                          onClick={() => handleDeleteApp(app.id, app.name)}
-                        >
-                          {t('apps.delete.menu_item')}
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
+                    {canDeleteApp && (
+                      <Menu shadow="md" width={200} position="bottom-end">
+                        <Menu.Target>
+                          <ActionIcon variant="subtle" color="gray">
+                            <MoreVertical size={18} />
+                          </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                          <Menu.Item
+                            color="red"
+                            leftSection={<Trash2 size={16} />}
+                            onClick={() => handleDeleteApp(app.id, app.name)}
+                          >
+                            {t('apps.delete.menu_item')}
+                          </Menu.Item>
+                        </Menu.Dropdown>
+                      </Menu>
+                    )}
                   </Group>
 
                   {/* Description */}

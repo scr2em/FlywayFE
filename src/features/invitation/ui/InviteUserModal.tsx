@@ -7,6 +7,7 @@ import { ControlledTextInput } from '../../../shared/controlled-form-fields/Cont
 
 import { useCreateInvitationMutation } from '../../../shared/api/queries/invitation';
 import { useShowBackendError } from '../../../shared/hooks/useShowBackendError';
+import { usePermission } from '../../../shared/hooks/usePermission';
 import { notifications } from '@mantine/notifications';
 import { ControlledRolesSelect } from '../../../shared/controlled-form-fields/ControlledSelect';
 
@@ -19,6 +20,7 @@ export function InviteUserModal({ opened, onClose }: InviteUserModalProps) {
   const { t } = useTranslation();
   const createInvitationMutation = useCreateInvitationMutation();
   const showBackendError = useShowBackendError();
+  const { hasPermission: canInviteMembers } = usePermission('invitation.create');
 
   const {
     control,
@@ -34,6 +36,11 @@ export function InviteUserModal({ opened, onClose }: InviteUserModalProps) {
       roleId: '',
     },
   });
+
+  // Defense-in-depth: Don't render modal content if user doesn't have permission
+  if (!canInviteMembers) {
+    return null;
+  }
 
   const onSubmit = async (data: InviteUserFormData) => {
     try {
