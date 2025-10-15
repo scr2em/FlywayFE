@@ -71,11 +71,7 @@ export function AppLayout() {
       label: t('navigation.team'),
       path: '/team',
     },
-    {
-      icon: Shield,
-      label: t('navigation.roles'),
-      path: '/roles',
-    },
+
     {
       icon: BarChart,
       label: t('navigation.analytics'),

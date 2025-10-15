@@ -104,6 +104,24 @@ export interface UpdateMemberRoleRequest {
   roleId: string;
 }
 
+/** Request to create a new mobile application */
+export interface CreateMobileApplicationRequest {
+  /** Unique bundle identifier for the mobile application (e.g., com.example.app) */
+  bundleId: string;
+  /** Mobile application name */
+  name: string;
+  /** Mobile application description */
+  description?: string;
+}
+
+/** Request to update a mobile application */
+export interface UpdateMobileApplicationRequest {
+  /** Mobile application name */
+  name: string;
+  /** Mobile application description */
+  description?: string;
+}
+
 /** Request to update user information */
 export interface UpdateUserRequest {
   /** User's first name */
@@ -278,6 +296,32 @@ export interface PaginatedOrganizationMemberResponse {
   count: number;
   /** Maximum items per page */
   itemsPerPage: number;
+}
+
+/** Mobile application information */
+export interface MobileApplicationResponse {
+  /** Mobile application ID */
+  id: string;
+  /** Bundle identifier for the mobile application */
+  bundleId: string;
+  /** Organization ID that owns this application */
+  organizationId: string;
+  /** Mobile application name */
+  name: string;
+  /** Mobile application description */
+  description?: string;
+  /** User ID who created the application */
+  createdBy: string;
+  /**
+   * When the application was created
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * When the application was last updated
+   * @format date-time
+   */
+  updatedAt?: string;
 }
 
 /** Error response */
@@ -954,6 +998,107 @@ export class Api<
     removeMember: (memberId: string, params: RequestParams = {}) =>
       this.request<void, ErrorResponse>({
         path: `/members/${memberId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+  };
+  mobileApplications = {
+    /**
+     * No description
+     *
+     * @tags Mobile Applications
+     * @name GetAllMobileApplications
+     * @summary Get all mobile applications for the organization
+     * @request GET:/mobile-applications
+     * @secure
+     */
+    getAllMobileApplications: (params: RequestParams = {}) =>
+      this.request<MobileApplicationResponse[], ErrorResponse>({
+        path: `/mobile-applications`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Mobile Applications
+     * @name CreateMobileApplication
+     * @summary Create a new mobile application
+     * @request POST:/mobile-applications
+     * @secure
+     */
+    createMobileApplication: (
+      data: CreateMobileApplicationRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<MobileApplicationResponse, ErrorResponse>({
+        path: `/mobile-applications`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Mobile Applications
+     * @name GetMobileApplicationById
+     * @summary Get mobile application by ID
+     * @request GET:/mobile-applications/{id}
+     * @secure
+     */
+    getMobileApplicationById: (id: string, params: RequestParams = {}) =>
+      this.request<MobileApplicationResponse, ErrorResponse>({
+        path: `/mobile-applications/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Mobile Applications
+     * @name UpdateMobileApplication
+     * @summary Update mobile application
+     * @request PUT:/mobile-applications/{id}
+     * @secure
+     */
+    updateMobileApplication: (
+      id: string,
+      data: UpdateMobileApplicationRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<MobileApplicationResponse, ErrorResponse>({
+        path: `/mobile-applications/${id}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Mobile Applications
+     * @name DeleteMobileApplication
+     * @summary Delete mobile application
+     * @request DELETE:/mobile-applications/{id}
+     * @secure
+     */
+    deleteMobileApplication: (id: string, params: RequestParams = {}) =>
+      this.request<void, ErrorResponse>({
+        path: `/mobile-applications/${id}`,
         method: "DELETE",
         secure: true,
         ...params,

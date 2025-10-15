@@ -15,12 +15,14 @@ import {
   ScrollArea,
   ActionIcon,
   Tooltip,
+  Menu,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, UserPlus, MailPlus } from 'lucide-react';
+import { AlertCircle, UserPlus, MailPlus, MoreVertical, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
-import { useOrganizationMembersQuery } from '../../../shared/api/queries/organization';
+import { modals } from '@mantine/modals';
+import { useOrganizationMembersQuery, useRemoveMemberMutation } from '../../../shared/api/queries/organization';
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
 import { InviteUserModal } from '../../invitation';
 import { useResendInvitationMutation } from '../../../shared/api/queries/invitation';
@@ -41,6 +43,7 @@ export function TeamPage() {
   } = useOrganizationMembersQuery();
   
   const resendInvitationMutation = useResendInvitationMutation();
+  const removeMemberMutation = useRemoveMemberMutation();
   const { showError } = useShowBackendError();
 
   const handleResendInvitation = async (userId: string) => {
@@ -57,6 +60,31 @@ export function TeamPage() {
     } finally {
       setResendingUserId(null);
     }
+  };
+
+  const handleDeleteMember = (memberId: string, memberName: string) => {
+    modals.openConfirmModal({
+      title: t('team.delete.title'),
+      children: (
+        <Text size="sm">
+          {t('team.delete.confirmation', { name: memberName })}
+        </Text>
+      ),
+      labels: { confirm: t('team.delete.confirm'), cancel: t('team.delete.cancel') },
+      confirmProps: { color: 'red' },
+      onConfirm: async () => {
+        try {
+          await removeMemberMutation.mutateAsync(memberId);
+          notifications.show({
+            title: t('common.success'),
+            message: t('team.delete.success_message'),
+            color: 'green',
+          });
+        } catch (error) {
+          showError(error);
+        }
+      },
+    });
   };
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -180,6 +208,7 @@ export function TeamPage() {
                   <Table.Th>{t('team.table.status')}</Table.Th>
                   <Table.Th>{t('team.table.invitation_status')}</Table.Th>
                   <Table.Th>{t('team.table.joined')}</Table.Th>
+                  <Table.Th>{t('team.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -262,6 +291,25 @@ export function TeamPage() {
                           day: 'numeric',
                         })}
                       </Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Menu shadow="md" width={200} position="bottom-end">
+                        <Menu.Target>
+                          <ActionIcon variant="subtle" color="gray">
+                            <MoreVertical size={18} />
+                          </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                          <Menu.Item
+                            color="red"
+                            leftSection={<Trash2 size={16} />}
+                            onClick={() => handleDeleteMember(member.id, `${member.user.firstName} ${member.user.lastName}`)}
+                            disabled={member.user.id === currentUser.id}
+                          >
+                            {t('team.delete.menu_item')}
+                          </Menu.Item>
+                        </Menu.Dropdown>
+                      </Menu>
                     </Table.Td>
                   </Table.Tr>
                 ))}

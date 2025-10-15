@@ -52,3 +52,18 @@ export function useOrganizationMembersQuery() {
   });
 }
 
+export function useRemoveMemberMutation() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (memberId: string) => {
+      const response = await apiClient.members.removeMember(memberId);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate members query to refetch the teams page
+      queryClient.invalidateQueries({ queryKey: ORGANIZATION_MEMBERS_QUERY_KEY });
+    },
+  });
+}
+
