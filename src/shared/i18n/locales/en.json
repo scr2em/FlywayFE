@@ -238,6 +238,41 @@
       "redirecting_message": "Redirecting to login page...",
       "go_to_login": "Go to Login"
     }
+  },
+  "apps": {
+    "title": "Mobile Applications",
+    "subtitle": "Manage your mobile applications ({{count}} apps)",
+    "create_button": "Create App",
+    "create_first_app": "Create Your First App",
+    "no_apps": "No applications yet",
+    "no_organization_title": "No Organization",
+    "no_organization_message": "You need to be part of an organization to manage apps.",
+    "error_loading": "Failed to load applications. Please try again.",
+    "created_at": "Created on {{date}}",
+    "create": {
+      "modal_title": "Create Mobile Application",
+      "bundle_id_label": "Bundle ID",
+      "bundle_id_placeholder": "com.example.app",
+      "name_label": "App Name",
+      "name_placeholder": "Enter app name",
+      "description_label": "Description (Optional)",
+      "description_placeholder": "Describe your application",
+      "submit_button": "Create Application",
+      "success_message": "Application created successfully",
+      "validation": {
+        "bundle_id_required": "Bundle ID is required",
+        "bundle_id_invalid": "Bundle ID must be in format: com.example.app",
+        "name_required": "App name is required"
+      }
+    },
+    "delete": {
+      "title": "Delete Application",
+      "confirmation": "Are you sure you want to delete '{{name}}'? This action cannot be undone and all associated data will be lost.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "success_message": "Application deleted successfully",
+      "menu_item": "Delete app"
+    }
   }
 }
 

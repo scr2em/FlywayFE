@@ -4,6 +4,7 @@ import { SignupPage } from '../../features/auth/signup';
 import { DashboardPage } from '../../features/dashboard';
 import { CreateOrganizationPage } from '../../features/organization/create-organization';
 import { TeamPage } from '../../features/team';
+import { AppsPage } from '../../features/apps';
 import { PermissionsCalculatorPage } from '../../features/permissions-calculator';
 import { AcceptInvitationPage } from '../../features/invitation';
 import { ProtectedRoute, PublicRoute } from '../../shared/lib/router';
@@ -56,7 +57,7 @@ export function AppRoutes() {
         }
       >
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/apps" element={<div>Projects Page (Coming Soon)</div>} />
+        <Route path="/apps" element={<AppsPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/analytics" element={<div>Analytics Page (Coming Soon)</div>} />
         <Route path="/organization" element={<div>Organization Page (Coming Soon)</div>} />
