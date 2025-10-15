@@ -307,7 +307,8 @@
       "nav": {
         "bundles": "Bundles",
         "builds": "Builds",
-        "access": "Access"
+        "access": "Access",
+        "api_keys": "API Keys"
       },
       "bundles": {
         "title": "Bundles",
@@ -320,6 +321,10 @@
       "access": {
         "title": "Access",
         "coming_soon": "Access management coming soon"
+      },
+      "api_keys": {
+        "title": "API Keys",
+        "coming_soon": "API Keys management coming soon"
       }
     }
   }

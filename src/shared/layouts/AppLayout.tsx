@@ -53,25 +53,6 @@ export function AppLayout() {
       permission: permissions.canReadMobileApp,
     },
     {
-      icon: Radio,
-      label: t('navigation.live_updates'),
-      permission: permissions.canViewDeployment,
-      children: [
-        {
-          icon: Package,
-          label: t('navigation.bundles'),
-          path: '/bundles',
-          permission: permissions.canViewDeployment,
-        },
-        {
-          icon: Boxes,
-          label: t('navigation.builds'),
-          path: '/builds',
-          permission: permissions.canViewDeployment,
-        },
-      ],
-    },
-    {
       icon: Users,
       label: t('navigation.team'),
       path: '/team',
@@ -185,42 +166,9 @@ export function AppLayout() {
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollArea}>
           <Box>
-            {visibleNavigationItems.map((item, index) => {
+            {visibleNavigationItems.map((item) => {
               const Icon = item.icon;
-              
-              if (item.children) {
-                const isChildActive = item.children.some(
-                  (child) => location.pathname === child.path
-                );
-                
-                return (
-                  <NavLink
-                    key={`parent-${index}`}
-                    label={item.label}
-                    leftSection={<Icon size={20} />}
-                    childrenOffset={28}
-                    mb="xs"
-                    defaultOpened={isChildActive}
-                    style={{ borderRadius: 'var(--mantine-radius-md)' }}
-                  >
-                    {item.children.map((child) => {
-                      const ChildIcon = child.icon;
-                      const isActive = location.pathname === child.path;
-                      
-                      return (
-                        <NavLink
-                          key={child.path}
-                          label={child.label}
-                          leftSection={<ChildIcon size={18} />}
-                          active={isActive}
-                          onClick={() => navigate(child.path)}
-                          style={{ borderRadius: 'var(--mantine-radius-md)' }}
-                        />
-                      );
-                    })}
-                  </NavLink>
-                );
-              }
+           
               
               const isActive = location.pathname === item.path;
               

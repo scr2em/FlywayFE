@@ -10,7 +10,8 @@ import {
   AppDetailPage, 
   BundlesPage, 
   BuildsPage, 
-  AccessPage 
+  AccessPage,
+  ApiKeysPage 
 } from '../../features/apps';
 import { PermissionsCalculatorPage } from '../../features/permissions-calculator';
 import { AcceptInvitationPage } from '../../features/invitation';
@@ -70,6 +71,7 @@ export function AppRoutes() {
           <Route path="bundles" element={<BundlesPage />} />
           <Route path="builds" element={<BuildsPage />} />
           <Route path="access" element={<AccessPage />} />
+          <Route path="api-keys" element={<ApiKeysPage />} />
         </Route>
         <Route path="/team" element={<TeamPage />} />
         <Route path="/analytics" element={<div>Analytics Page (Coming Soon)</div>} />
