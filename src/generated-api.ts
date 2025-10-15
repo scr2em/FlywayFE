@@ -395,8 +395,6 @@ export interface PaginatedApiKeyResponse {
 export interface CreateApiKeyRequest {
   /** Name/description for the API key */
   name: string;
-  /** Bundle ID of the mobile application */
-  bundleId: string;
 }
 
 /** API key information */
@@ -1399,17 +1397,15 @@ export class Api<
     createApiKey: (
       orgId: string,
       bundleId: string,
-      query: {
-        /** Name/description for the API key */
-        name: string;
-      },
+      data: CreateApiKeyRequest,
       params: RequestParams = {},
     ) =>
       this.request<ApiKeyResponse, void | ErrorResponse>({
         path: `/${orgId}/${bundleId}/api-keys`,
         method: "POST",
-        query: query,
+        body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
