@@ -17,6 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, Plus, MoreVertical, Trash2, Package } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { notifications } from '@mantine/notifications';
 import { modals } from '@mantine/modals';
 import {
@@ -29,6 +30,7 @@ import { CreateAppModal } from './CreateAppModal';
 
 export function AppsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [createModalOpened, setCreateModalOpened] = useState(false);
   const { data: currentUser, isLoading: isLoadingUser } = useCurrentUserQuery();
   const { data: apps, isLoading, isError } = useMobileAppsQuery();
@@ -156,7 +158,8 @@ export function AppsPage() {
                 shadow="sm"
                 radius="md"
                 padding="lg"
-                style={{ position: 'relative' }}
+                style={{ position: 'relative', cursor: 'pointer' }}
+                onClick={() => navigate(`/apps/${app.bundleId}`)}
               >
                 <Stack gap="md">
                   {/* Card Header */}
@@ -176,7 +179,11 @@ export function AppsPage() {
                     {canDeleteMobileApp && (
                       <Menu shadow="md" width={200} position="bottom-end">
                         <Menu.Target>
-                          <ActionIcon variant="subtle" color="gray">
+                          <ActionIcon 
+                            variant="subtle" 
+                            color="gray"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <MoreVertical size={18} />
                           </ActionIcon>
                         </Menu.Target>
@@ -184,7 +191,10 @@ export function AppsPage() {
                           <Menu.Item
                             color="red"
                             leftSection={<Trash2 size={16} />}
-                            onClick={() => handleDeleteApp(app.id, app.name)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteApp(app.id, app.name);
+                            }}
                           >
                             {t('apps.delete.menu_item')}
                           </Menu.Item>

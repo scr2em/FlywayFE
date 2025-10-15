@@ -1084,6 +1084,27 @@ export class Api<
      * No description
      *
      * @tags Mobile Applications
+     * @name GetMobileApplicationByBundleId
+     * @summary Get mobile application by bundle ID
+     * @request GET:/mobile-applications/bundle/{bundleId}
+     * @secure
+     */
+    getMobileApplicationByBundleId: (
+      bundleId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<MobileApplicationResponse, ErrorResponse>({
+        path: `/mobile-applications/bundle/${bundleId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Mobile Applications
      * @name GetMobileApplicationById
      * @summary Get mobile application by ID
      * @request GET:/mobile-applications/{id}

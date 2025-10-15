@@ -29,6 +29,18 @@ export function useCreateMobileAppMutation() {
   });
 }
 
+export function useMobileAppQuery(bundleId: string) {
+  return useQuery({
+    queryKey: [...MOBILE_APPS_QUERY_KEY, bundleId],
+    queryFn: async () => {
+      const response = await apiClient.mobileApplications.getMobileApplicationByBundleId(bundleId);
+      return response.data;
+    },
+    staleTime: 30 * 1000, // 30 seconds
+    enabled: !!bundleId,
+  });
+}
+
 export function useDeleteMobileAppMutation() {
   const queryClient = useQueryClient();
   

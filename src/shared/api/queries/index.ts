@@ -8,6 +8,7 @@ export {
 export { useCreateInvitationMutation, INVITATIONS_QUERY_KEY } from './invitation';
 export {
   useMobileAppsQuery,
+  useMobileAppQuery,
   useCreateMobileAppMutation,
   useDeleteMobileAppMutation,
   MOBILE_APPS_QUERY_KEY,

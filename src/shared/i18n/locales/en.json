@@ -294,6 +294,33 @@
       "cancel": "Cancel",
       "success_message": "Application deleted successfully",
       "menu_item": "Delete app"
+    },
+    "detail": {
+      "back_to_apps": "Back to Apps",
+      "error_loading": "Failed to load application details. Please try again.",
+      "description_title": "Description",
+      "no_description": "No description provided",
+      "details_title": "Application Details",
+      "bundle_id": "Bundle ID",
+      "created_at": "Created At",
+      "updated_at": "Last Updated",
+      "nav": {
+        "bundles": "Bundles",
+        "builds": "Builds",
+        "access": "Access"
+      },
+      "bundles": {
+        "title": "Bundles",
+        "coming_soon": "Bundles management coming soon"
+      },
+      "builds": {
+        "title": "Builds",
+        "coming_soon": "Builds management coming soon"
+      },
+      "access": {
+        "title": "Access",
+        "coming_soon": "Access management coming soon"
+      }
     }
   }
 }
