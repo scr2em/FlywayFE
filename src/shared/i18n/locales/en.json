@@ -316,7 +316,28 @@
       },
       "builds": {
         "title": "Builds",
-        "coming_soon": "Builds management coming soon"
+        "subtitle": "View and manage your application builds",
+        "coming_soon": "Builds management coming soon",
+        "no_builds": "No builds uploaded yet",
+        "create_first_build": "Upload your first build using the API",
+        "error_loading": "Failed to load builds. Please try again.",
+        "showing_count": "Showing {{from}}-{{to}} of {{total}} builds",
+        "table": {
+          "commit": "Commit",
+          "branch": "Branch",
+          "version": "Version",
+          "size": "Size",
+          "uploaded_at": "Uploaded",
+          "actions": "Actions"
+        },
+        "delete": {
+          "title": "Delete Build",
+          "confirmation": "Are you sure you want to delete this build? This action cannot be undone.",
+          "confirm": "Delete",
+          "cancel": "Cancel",
+          "success_message": "Build deleted successfully",
+          "menu_item": "Delete build"
+        }
       },
       "access": {
         "title": "Access",

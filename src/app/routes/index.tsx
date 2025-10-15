@@ -9,7 +9,7 @@ import {
   AppsPage, 
   AppDetailPage, 
   BundlesPage, 
-  BuildsPage, 
+  AppBuildsPage, 
   AccessPage,
   ApiKeysPage 
 } from '../../features/apps';
@@ -69,7 +69,7 @@ export function AppRoutes() {
         <Route path="/apps/:bundleId" element={<AppDetailPage />}>
           <Route index element={<Navigate to="bundles" replace />} />
           <Route path="bundles" element={<BundlesPage />} />
-          <Route path="builds" element={<BuildsPage />} />
+          <Route path="builds" element={<AppBuildsPage />} />
           <Route path="access" element={<AccessPage />} />
           <Route path="api-keys" element={<ApiKeysPage />} />
         </Route>

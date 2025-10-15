@@ -36,7 +36,7 @@ export function ApiKeysPage() {
   const { data: currentUser } = useCurrentUserQuery();
   const orgId = currentUser?.organization?.id || '';
 
-  const pageSize = 20;
+  const pageSize = 10;
   const { data, isLoading, isError } = useApiKeysQuery(
     orgId,
     bundleId || '',
