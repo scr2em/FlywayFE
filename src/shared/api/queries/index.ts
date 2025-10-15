@@ -5,6 +5,10 @@ export {
   useRolesQuery,
   ROLES_QUERY_KEY,
 } from './role';
+export {
+  usePermissionsQuery,
+  PERMISSIONS_QUERY_KEY,
+} from './permission';
 export { useCreateInvitationMutation, INVITATIONS_QUERY_KEY } from './invitation';
 export {
   useMobileAppsQuery,

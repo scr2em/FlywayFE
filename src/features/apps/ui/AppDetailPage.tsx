@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate, useLocation, Outlet } from 'react-router';
-import { AlertCircle, Package, ArrowLeft, Hammer, Lock, Key } from 'lucide-react';
+import { AlertCircle, Package, ArrowLeft, Hammer, Key } from 'lucide-react';
 import { useMobileAppQuery } from '../../../shared/api/queries';
 
 export function AppDetailPage() {

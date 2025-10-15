@@ -12,9 +12,6 @@ import {
   Bell,
   Menu as MenuIcon,
   Folder,
-  Radio,
-  Package,
-  Boxes,
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';

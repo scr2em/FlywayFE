@@ -14,37 +14,44 @@ import {
   ActionIcon,
   Tooltip,
   Badge,
+  Alert,
+  Loader,
+  Center,
 } from '@mantine/core';
-import { Copy, Check, Calculator } from 'lucide-react';
+import { Copy, Check, Calculator, AlertCircle } from 'lucide-react';
 import {
-  PERMISSIONS,
   getCategories,
   getPermissionsByCategory,
   permissionStringToPermissions,
   permissionsToPermissionString,
 } from '../model/permissions';
+import { usePermissionsQuery } from '../../../shared/api/queries';
 
 export function PermissionsCalculatorPage() {
   const { t } = useTranslation();
   const [permissionString, setPermissionString] = useState('0');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  
+  const { data: permissions, isLoading, error } = usePermissionsQuery();
 
   // Update selected permissions when permission string changes
   useEffect(() => {
-    if (permissionString) {
-      const permissions = permissionStringToPermissions(permissionString);
-      setSelectedPermissions(permissions);
+    if (permissionString && permissions) {
+      const perms = permissionStringToPermissions(permissionString, permissions);
+      setSelectedPermissions(perms);
     }
-  }, [permissionString]);
+  }, [permissionString, permissions]);
 
   // Update permission string when selected permissions change
   const handlePermissionToggle = (permissionCode: string) => {
+    if (!permissions) return;
+
     const newSelected = selectedPermissions.includes(permissionCode)
       ? selectedPermissions.filter((code) => code !== permissionCode)
       : [...selectedPermissions, permissionCode];
 
     setSelectedPermissions(newSelected);
-    const newPermissionString = permissionsToPermissionString(newSelected);
+    const newPermissionString = permissionsToPermissionString(newSelected, permissions);
     setPermissionString(newPermissionString);
   };
 
@@ -55,7 +62,34 @@ export function PermissionsCalculatorPage() {
     }
   };
 
-  const categories = getCategories();
+  if (isLoading) {
+    return (
+      <Container size="xl" py="md">
+        <Center h={400}>
+          <Stack align="center" gap="md">
+            <Loader size="lg" />
+            <Text c="dimmed">{t('common.loading')}</Text>
+          </Stack>
+        </Center>
+      </Container>
+    );
+  }
+
+  if (error || !permissions) {
+    return (
+      <Container size="xl" py="md">
+        <Alert
+          icon={<AlertCircle size={16} />}
+          title={t('common.error')}
+          color="red"
+        >
+          {t('permissions_calculator.error_loading')}
+        </Alert>
+      </Container>
+    );
+  }
+
+  const categories = getCategories(permissions);
 
   return (
     <Container size="xl" py="md">
@@ -110,7 +144,7 @@ export function PermissionsCalculatorPage() {
             <Text size="xs" c="dimmed">
               {t('permissions_calculator.enabled_count', {
                 count: selectedPermissions.length,
-                total: PERMISSIONS.length,
+                total: permissions.length,
               })}
             </Text>
           </Group>
@@ -118,7 +152,7 @@ export function PermissionsCalculatorPage() {
 
         {/* Permissions by Category */}
         {categories.map((category) => {
-          const categoryPermissions = getPermissionsByCategory(category);
+          const categoryPermissions = getPermissionsByCategory(permissions, category);
           const enabledInCategory = categoryPermissions.filter((p) =>
             selectedPermissions.includes(p.code)
           ).length;
@@ -177,4 +211,3 @@ export function PermissionsCalculatorPage() {
     </Container>
   );
 }
-

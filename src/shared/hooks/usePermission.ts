@@ -1,29 +1,7 @@
 import { useCurrentUserQuery } from '../api/queries/user';
-import { hasPermission, PERMISSIONS } from '../../features/permissions-calculator/model/permissions';
+import { usePermissionsQuery } from '../api/queries';
+import { hasPermission } from '../../features/permissions-calculator/model/permissions';
 
-/**
- * Permission Hooks for checking user permissions
- * 
- * @example
- * // Use the all-in-one permissions hook (recommended)
- * const { canDeleteMobileApp, canCreateMobileApp, canUpdateOrganization } = usePermissions();
- * 
- * @example
- * // Check single permission
- * const hasOrgUpdatePermission = usePermission('organization.update');
- * 
- * @example
- * // Check if user has any of multiple permissions
- * const hasAnyMemberPermission = useAnyPermission(['member.add', 'member.remove']);
- * 
- * @example
- * // Check if user has all specified permissions
- * const hasAllRolePermissions = useAllPermissions(['role.view', 'role.create']);
- * 
- * @example
- * // Get user's permissions value and role
- * const { permissionsValue, role } = useUserPermissions();
- */
 
 /**
  * Convert permission code to camelCase property name
@@ -66,13 +44,16 @@ function permissionCodeToCamelCase(code: string): string {
  */
 export function usePermissions(enabled = true) {
   const { data: user } = useCurrentUserQuery(enabled);
+  const { data: permissionDefinitions } = usePermissionsQuery();
   const permissionsValue = user?.role?.permissionsValue;
 
   const permissions: Record<string, boolean> = {};
 
-  for (const permission of PERMISSIONS) {
-    const key = permissionCodeToCamelCase(permission.code);
-    permissions[key] = hasPermission(permissionsValue, permission.code);
+  if (permissionDefinitions) {
+    for (const permission of permissionDefinitions) {
+      const key = permissionCodeToCamelCase(permission.code);
+      permissions[key] = hasPermission(permissionsValue, permission.code, permissionDefinitions);
+    }
   }
 
   return permissions as {
@@ -102,5 +83,15 @@ export function usePermissions(enabled = true) {
     canCreateMobileApp: boolean;
     canUpdateMobileApp: boolean;
     canDeleteMobileApp: boolean;
+    canViewBuild: boolean;
+    canUploadBuild: boolean;
+    canDeleteBuild: boolean;
+    canViewApiKey: boolean;
+    canCreateApiKey: boolean;
+    canDeleteApiKey: boolean;
+    canViewChannel: boolean;
+    canCreateChannel: boolean;
+    canUpdateChannel: boolean;
+    canDeleteChannel: boolean;
   };
 }

@@ -214,6 +214,7 @@
     "permissions_count": "permissions",
     "enabled": "enabled",
     "bit_value": "Bit value",
+    "error_loading": "Failed to load permissions. Please try again.",
     "categories": {
       "organization": "Organization",
       "member": "Member Management",
@@ -222,7 +223,11 @@
       "invitation": "Invitation Management",
       "user": "User Management",
       "deployment": "Deployment",
-      "billing": "Billing"
+      "billing": "Billing",
+      "mobile_app": "Mobile Applications",
+      "build": "Build Management",
+      "api_key": "API Key Management",
+      "channel": "Channel Management"
     }
   },
   "invitation": {

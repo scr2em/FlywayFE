@@ -1,245 +1,51 @@
 /**
- * Permission definition matching the backend Permission enum
+ * Permission definition from the API
  */
 export interface PermissionDefinition {
   code: string;
   label: string;
   description: string;
   category: string;
-  bitValue: bigint;
+  bitValue: string;
 }
 
 /**
- * All permissions with their bitwise values
- * Based on the backend Permission enum
+ * Default empty permissions array - will be populated from API
  */
-export const PERMISSIONS: PermissionDefinition[] = [
-  // Organization permissions (bits 0-2)
-  {
-    code: 'organization.update',
-    label: 'Update Organization',
-    description: 'Can update organization information',
-    category: 'organization',
-    bitValue: 1n << 0n,
-  },
-
-  // Member management permissions (bits 3-6)
-  {
-    code: 'member.view',
-    label: 'View Members',
-    description: 'Can view organization members',
-    category: 'member',
-    bitValue: 1n << 3n,
-  },
-  {
-    code: 'member.add',
-    label: 'Add Members',
-    description: 'Can add new members to the organization',
-    category: 'member',
-    bitValue: 1n << 4n,
-  },
-  {
-    code: 'member.remove',
-    label: 'Remove Members',
-    description: 'Can remove members from the organization',
-    category: 'member',
-    bitValue: 1n << 5n,
-  },
-  {
-    code: 'member.update_role',
-    label: 'Update Member Role',
-    description: 'Can update member roles',
-    category: 'member',
-    bitValue: 1n << 6n,
-  },
-
-  // Role management permissions (bits 7-11)
-  {
-    code: 'role.view',
-    label: 'View Roles',
-    description: 'Can view roles',
-    category: 'role',
-    bitValue: 1n << 7n,
-  },
-  {
-    code: 'role.create',
-    label: 'Create Roles',
-    description: 'Can create new roles',
-    category: 'role',
-    bitValue: 1n << 8n,
-  },
-  {
-    code: 'role.update',
-    label: 'Update Roles',
-    description: 'Can update existing roles',
-    category: 'role',
-    bitValue: 1n << 9n,
-  },
-  {
-    code: 'role.delete',
-    label: 'Delete Roles',
-    description: 'Can delete roles',
-    category: 'role',
-    bitValue: 1n << 10n,
-  },
-  {
-    code: 'role.assign_permissions',
-    label: 'Assign Permissions',
-    description: 'Can assign permissions to roles',
-    category: 'role',
-    bitValue: 1n << 11n,
-  },
-
-  // Permission management (bit 12)
-  {
-    code: 'permission.view',
-    label: 'View Permissions',
-    description: 'Can view all permissions',
-    category: 'permission',
-    bitValue: 1n << 12n,
-  },
-
-  // Invitation permissions (bits 13-15)
-  {
-    code: 'invitation.view',
-    label: 'View Invitations',
-    description: 'Can view organization invitations',
-    category: 'invitation',
-    bitValue: 1n << 13n,
-  },
-  {
-    code: 'invitation.create',
-    label: 'Create Invitations',
-    description: 'Can create invitations to join organization',
-    category: 'invitation',
-    bitValue: 1n << 14n,
-  },
-  {
-    code: 'invitation.cancel',
-    label: 'Cancel Invitations',
-    description: 'Can cancel pending invitations',
-    category: 'invitation',
-    bitValue: 1n << 15n,
-  },
-
-  // User management permissions (bits 16-18)
-  {
-    code: 'user.view',
-    label: 'View Users',
-    description: 'Can view user information',
-    category: 'user',
-    bitValue: 1n << 16n,
-  },
-  {
-    code: 'user.update',
-    label: 'Update Users',
-    description: 'Can update user information',
-    category: 'user',
-    bitValue: 1n << 17n,
-  },
-  {
-    code: 'user.delete',
-    label: 'Delete Users',
-    description: 'Can delete users',
-    category: 'user',
-    bitValue: 1n << 18n,
-  },
-
-  // Deployment permissions (bits 19-21)
-  {
-    code: 'deployment.create',
-    label: 'Deploy Updates',
-    description: 'Can deploy application updates',
-    category: 'deployment',
-    bitValue: 1n << 19n,
-  },
-  {
-    code: 'deployment.view',
-    label: 'View Deployments',
-    description: 'Can view deployment history',
-    category: 'deployment',
-    bitValue: 1n << 20n,
-  },
-  {
-    code: 'deployment.rollback',
-    label: 'Rollback Deployments',
-    description: 'Can rollback deployments',
-    category: 'deployment',
-    bitValue: 1n << 21n,
-  },
-
-  // Billing permissions (bits 22-23)
-  {
-    code: 'billing.view',
-    label: 'View Billing',
-    description: 'Can view billing information',
-    category: 'billing',
-    bitValue: 1n << 22n,
-  },
-  {
-    code: 'billing.manage',
-    label: 'Manage Billing',
-    description: 'Can manage billing and subscriptions',
-    category: 'billing',
-    bitValue: 1n << 23n,
-  },
-
-  // Mobile Application permissions (bits 24-27)
-  {
-    code: 'mobile_app.read',
-    label: 'View Mobile Apps',
-    description: 'Can view mobile applications',
-    category: 'mobile_app',
-    bitValue: 1n << 24n,
-  },
-  {
-    code: 'mobile_app.create',
-    label: 'Create Mobile Apps',
-    description: 'Can create new mobile applications',
-    category: 'mobile_app',
-    bitValue: 1n << 25n,
-  },
-  {
-    code: 'mobile_app.update',
-    label: 'Update Mobile Apps',
-    description: 'Can update mobile applications',
-    category: 'mobile_app',
-    bitValue: 1n << 26n,
-  },
-  {
-    code: 'mobile_app.delete',
-    label: 'Delete Mobile Apps',
-    description: 'Can delete mobile applications',
-    category: 'mobile_app',
-    bitValue: 1n << 27n,
-  },
-];
+export const PERMISSIONS: PermissionDefinition[] = [];
 
 /**
  * Get unique categories from permissions
  */
-export function getCategories(): string[] {
-  const categories = new Set(PERMISSIONS.map((p) => p.category));
+export function getCategories(permissions: PermissionDefinition[]): string[] {
+  const categories = new Set(permissions.map((p) => p.category));
   return Array.from(categories).sort();
 }
 
 /**
  * Get permissions by category
  */
-export function getPermissionsByCategory(category: string): PermissionDefinition[] {
-  return PERMISSIONS.filter((p) => p.category === category);
+export function getPermissionsByCategory(
+  permissions: PermissionDefinition[],
+  category: string
+): PermissionDefinition[] {
+  return permissions.filter((p) => p.category === category);
 }
 
 /**
  * Convert permission string (bigint) to array of permission codes
  */
-export function permissionStringToPermissions(permissionString: string): string[] {
+export function permissionStringToPermissions(
+  permissionString: string,
+  permissions: PermissionDefinition[]
+): string[] {
   try {
     const permissionValue = BigInt(permissionString);
     const enabledPermissions: string[] = [];
 
-    for (const permission of PERMISSIONS) {
-      if ((permissionValue & permission.bitValue) === permission.bitValue) {
+    for (const permission of permissions) {
+      const bitValue = BigInt(permission.bitValue);
+      if ((permissionValue & bitValue) === bitValue) {
         enabledPermissions.push(permission.code);
       }
     }
@@ -254,13 +60,16 @@ export function permissionStringToPermissions(permissionString: string): string[
 /**
  * Convert array of permission codes to permission string (bigint)
  */
-export function permissionsToPermissionString(permissionCodes: string[]): string {
+export function permissionsToPermissionString(
+  permissionCodes: string[],
+  permissions: PermissionDefinition[]
+): string {
   let permissionValue = 0n;
 
   for (const code of permissionCodes) {
-    const permission = PERMISSIONS.find((p) => p.code === code);
+    const permission = permissions.find((p) => p.code === code);
     if (permission) {
-      permissionValue |= permission.bitValue;
+      permissionValue |= BigInt(permission.bitValue);
     }
   }
 
@@ -270,31 +79,40 @@ export function permissionsToPermissionString(permissionCodes: string[]): string
 /**
  * Get permission definition by code
  */
-export function getPermissionByCode(code: string): PermissionDefinition | undefined {
-  return PERMISSIONS.find((p) => p.code === code);
+export function getPermissionByCode(
+  code: string,
+  permissions: PermissionDefinition[]
+): PermissionDefinition | undefined {
+  return permissions.find((p) => p.code === code);
 }
 
 /**
  * Check if a permission string contains a specific permission
  * @param permissionString - The bitwise permissions value as a string
  * @param permissionCode - The permission code to check (e.g., "organization.update")
+ * @param permissions - The list of permission definitions
  * @returns true if the permission is present, false otherwise
  */
-export function hasPermission(permissionString: string | undefined | null, permissionCode: string): boolean {
+export function hasPermission(
+  permissionString: string | undefined | null,
+  permissionCode: string,
+  permissions: PermissionDefinition[]
+): boolean {
   if (!permissionString) {
     return false;
   }
 
   try {
     const permissionValue = BigInt(permissionString);
-    const permission = getPermissionByCode(permissionCode);
+    const permission = getPermissionByCode(permissionCode, permissions);
     
     if (!permission) {
       console.warn(`Unknown permission code: ${permissionCode}`);
       return false;
     }
 
-    return (permissionValue & permission.bitValue) === permission.bitValue;
+    const bitValue = BigInt(permission.bitValue);
+    return (permissionValue & bitValue) === bitValue;
   } catch (error) {
     console.error('Invalid permission string:', error);
     return false;
