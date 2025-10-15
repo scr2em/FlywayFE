@@ -8,10 +8,11 @@ import {
   Loader,
   Button,
   Alert,
-  SimpleGrid,
   Group,
   Menu,
   ActionIcon,
+  Table,
+  ScrollArea,
   Badge,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
@@ -143,9 +144,9 @@ export function ChannelsPage() {
           </Button>
         </Group>
 
-        {/* Channels Grid */}
+        {/* Channels Table */}
         {channels.length === 0 ? (
-          <Card withBorder shadow="sm" p="xl" radius="md">
+          <Card withBorder   p="xl" radius="md">
             <Center>
               <Stack align="center" gap="md">
                 <Radio size={48} strokeWidth={1.5} color="var(--mantine-color-dimmed)" />
@@ -163,84 +164,87 @@ export function ChannelsPage() {
           </Card>
         ) : (
           <>
-            <SimpleGrid
-              cols={{ base: 1, sm: 2, lg: 3 }}
-              spacing="lg"
-            >
-              {channels.map((channel) => (
-                <Card
-                  key={channel.id}
-                  withBorder
-                  shadow="sm"
-                  radius="md"
-                  padding="lg"
-                  style={{ position: 'relative' }}
-                >
-                  <Stack gap="md">
-                    {/* Card Header */}
-                    <Group justify="space-between" align="flex-start">
-                      <Box style={{ flex: 1 }}>
-                        <Group gap="xs" mb={4}>
-                          <Radio size={20} strokeWidth={2} />
-                          <Text fw={600} size="lg" style={{ lineHeight: 1.2 }}>
-                            {channel.name}
+            <Card withBorder  padding={0} radius="md">
+              <ScrollArea>
+                <Table highlightOnHover verticalSpacing="md" horizontalSpacing="lg">
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>{t('channels.table.name')}</Table.Th>
+                      <Table.Th>{t('channels.table.description')}</Table.Th>
+                      <Table.Th>{t('channels.table.created_at')}</Table.Th>
+                      <Table.Th>{t('channels.table.updated_at')}</Table.Th>
+                      <Table.Th>{t('channels.table.actions')}</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {channels.map((channel) => (
+                      <Table.Tr key={channel.id}>
+                        <Table.Td>
+                          <Group gap="sm">
+                            <Radio size={20} strokeWidth={2} />
+                            <div>
+                              <Text fw={500} size="sm">
+                                {channel.name}
+                              </Text>
+                              <Badge variant="light" color="blue" size="xs" mt={2}>
+                                {t('channels.badge')}
+                              </Badge>
+                            </div>
+                          </Group>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="sm" c={channel.description ? undefined : 'dimmed'}>
+                            {channel.description || t('channels.no_description')}
                           </Text>
-                        </Group>
-                        <Badge variant="light" color="blue" size="sm">
-                          {t('channels.badge')}
-                        </Badge>
-                      </Box>
-                      
-                      <Menu shadow="md" width={200} position="bottom-end">
-                        <Menu.Target>
-                          <ActionIcon 
-                            variant="subtle" 
-                            color="gray"
-                          >
-                            <MoreVertical size={18} />
-                          </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          <Menu.Item
-                            leftSection={<Edit size={16} />}
-                            onClick={() => handleUpdateChannel(channel)}
-                          >
-                            {t('channels.update.menu_item')}
-                          </Menu.Item>
-                          <Menu.Item
-                            color="red"
-                            leftSection={<Trash2 size={16} />}
-                            onClick={() => handleDeleteChannel(channel.id, channel.name)}
-                          >
-                            {t('channels.delete.menu_item')}
-                          </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
-                    </Group>
-
-                    {/* Description */}
-                    {channel.description && (
-                      <Text size="sm" c="dimmed" style={{ minHeight: '40px' }}>
-                        {channel.description}
-                      </Text>
-                    )}
-
-                    {/* Metadata */}
-                    <Box pt="xs" style={{ borderTop: '1px solid var(--mantine-color-gray-3)' }}>
-                      <Text size="xs" c="dimmed">
-                        {t('channels.created_at', {
-                          date: new Date(channel.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          }),
-                        })}
-                      </Text>
-                    </Box>
-                  </Stack>
-                </Card>
-              ))}
-            </SimpleGrid>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="sm">
+                            {new Date(channel.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="sm">
+                            {new Date(channel.updatedAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Menu shadow="md" width={200} position="bottom-end">
+                            <Menu.Target>
+                              <ActionIcon variant="subtle" color="gray">
+                                <MoreVertical size={18} />
+                              </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                              <Menu.Item
+                                leftSection={<Edit size={16} />}
+                                onClick={() => handleUpdateChannel(channel)}
+                              >
+                                {t('channels.update.menu_item')}
+                              </Menu.Item>
+                              <Menu.Item
+                                color="red"
+                                leftSection={<Trash2 size={16} />}
+                                onClick={() => handleDeleteChannel(channel.id, channel.name)}
+                              >
+                                {t('channels.delete.menu_item')}
+                              </Menu.Item>
+                            </Menu.Dropdown>
+                          </Menu>
+                        </Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Table.Tbody>
+                </Table>
+              </ScrollArea>
+            </Card>
 
             {/* Load More Button */}
             {hasNextPage && (
@@ -275,4 +279,3 @@ export function ChannelsPage() {
     </Box>
   );
 }
-

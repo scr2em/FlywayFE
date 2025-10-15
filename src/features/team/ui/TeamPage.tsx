@@ -200,7 +200,7 @@ export function TeamPage() {
         </Group>
 
         {/* Members Table */}
-        <Card withBorder shadow="sm" padding={0} radius="md">
+        <Card withBorder   padding={0} radius="md">
           <ScrollArea>
             <Table highlightOnHover verticalSpacing="md" horizontalSpacing="lg">
               <Table.Thead>

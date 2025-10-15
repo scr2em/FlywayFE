@@ -128,7 +128,7 @@ export function AppsPage() {
 
         {/* Apps Grid */}
         {appsList.length === 0 ? (
-          <Card withBorder shadow="sm" p="xl" radius="md">
+          <Card withBorder p="xl" radius="md">
             <Center>
               <Stack align="center" gap="md">
                 <Package size={48} strokeWidth={1.5} color="var(--mantine-color-dimmed)" />
@@ -155,7 +155,6 @@ export function AppsPage() {
               <Card
                 key={app.id}
                 withBorder
-                shadow="sm"
                 radius="md"
                 padding="lg"
                 style={{ position: 'relative', cursor: 'pointer' }}

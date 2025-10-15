@@ -123,7 +123,7 @@ export function OrganizationPage() {
           )}
         </Group>
 
-        <Card withBorder shadow="sm" p="xl" radius="md">
+        <Card withBorder   p="xl" radius="md">
           {isEditing && canUpdateOrganization ? (
             <form onSubmit={form.handleSubmit(handleSubmit)}>
               <Stack gap="lg">

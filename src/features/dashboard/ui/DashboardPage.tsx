@@ -58,7 +58,7 @@ export function DashboardPage() {
         {/* Stats Cards */}
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
+            <Card withBorder padding="lg" radius="md"  >
               <Group justify="space-between">
                 <div>
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
@@ -81,7 +81,7 @@ export function DashboardPage() {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
+            <Card withBorder padding="lg" radius="md"  >
               <Group justify="space-between">
                 <div>
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
@@ -104,7 +104,7 @@ export function DashboardPage() {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
+            <Card withBorder padding="lg" radius="md"  >
               <Group justify="space-between">
                 <div>
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
@@ -127,7 +127,7 @@ export function DashboardPage() {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
+            <Card withBorder padding="lg" radius="md"  >
               <Group justify="space-between">
                 <div>
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
@@ -151,7 +151,7 @@ export function DashboardPage() {
         </Grid>
 
         {/* User Info Card */}
-        <Paper withBorder shadow="sm" p="xl" radius="md">
+        <Paper withBorder   p="xl" radius="md">
           <Stack gap="lg">
             <Group justify="space-between">
               <Title order={3}>{t('dashboard.user_info')}</Title>
@@ -243,7 +243,7 @@ export function DashboardPage() {
         </Paper>
 
         {/* Quick Actions */}
-        <Paper withBorder shadow="sm" p="xl" radius="md">
+        <Paper withBorder   p="xl" radius="md">
           <Stack gap="md">
             <Title order={3}>{t('dashboard.quick_actions')}</Title>
             <Group>
