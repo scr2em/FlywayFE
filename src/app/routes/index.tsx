@@ -66,6 +66,7 @@ export function AppRoutes() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/apps" element={<AppsPage />} />
         <Route path="/apps/:bundleId" element={<AppDetailPage />}>
+          <Route index element={<Navigate to="bundles" replace />} />
           <Route path="bundles" element={<BundlesPage />} />
           <Route path="builds" element={<BuildsPage />} />
           <Route path="access" element={<AccessPage />} />
