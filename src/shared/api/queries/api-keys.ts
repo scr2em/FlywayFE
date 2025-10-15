@@ -3,11 +3,15 @@ import { apiClient } from '../client';
 
 export const API_KEYS_QUERY_KEY = ['apiKeys'];
 
-export function useApiKeysQuery(orgId: string, bundleId: string) {
+export function useApiKeysQuery(orgId: string, bundleId: string, page: number = 0, size: number = 20) {
   return useQuery({
-    queryKey: [...API_KEYS_QUERY_KEY, orgId, bundleId],
+    queryKey: [...API_KEYS_QUERY_KEY, orgId, bundleId, page, size],
     queryFn: async () => {
-      const response = await apiClient.orgId.getApiKeys(orgId, bundleId);
+      const response = await apiClient.orgId.getApiKeys(orgId, bundleId, {
+        page,
+        size,
+        sort: 'desc',
+      });
       return response.data;
     },
     staleTime: 30 * 1000, // 30 seconds

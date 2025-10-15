@@ -329,6 +329,7 @@
         "no_keys": "No API keys created yet",
         "create_first_key": "Create your first API key to enable build uploads",
         "error_loading": "Failed to load API keys. Please try again.",
+        "showing_count": "Showing {{from}}-{{to}} of {{total}} keys",
         "table": {
           "name": "Name",
           "key_prefix": "Key",

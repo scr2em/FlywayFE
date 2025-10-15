@@ -377,6 +377,20 @@ export interface PaginatedBuildResponse {
   totalPages: number;
 }
 
+/** Paginated API key response */
+export interface PaginatedApiKeyResponse {
+  /** Array of API keys for this page */
+  data: ApiKeyResponse[];
+  /** Current page number */
+  page: number;
+  /** Items per page */
+  size: number;
+  /** Total number of API keys */
+  totalElements: number;
+  /** Total number of pages */
+  totalPages: number;
+}
+
 /** Request to create an API key */
 export interface CreateApiKeyRequest {
   /** Name/description for the API key */
@@ -1338,14 +1352,36 @@ export class Api<
      *
      * @tags API Keys
      * @name GetApiKeys
-     * @summary Get all API keys for a bundle
+     * @summary Get API keys with pagination and sorting
      * @request GET:/{orgId}/{bundleId}/api-keys
      * @secure
      */
-    getApiKeys: (orgId: string, bundleId: string, params: RequestParams = {}) =>
-      this.request<ApiKeyResponse[], ErrorResponse>({
+    getApiKeys: (
+      orgId: string,
+      bundleId: string,
+      query?: {
+        /**
+         * Page number (default 0)
+         * @default 0
+         */
+        page?: number;
+        /**
+         * Page size (default 20)
+         * @default 20
+         */
+        size?: number;
+        /**
+         * Sort direction by createdAt (default desc)
+         * @default "desc"
+         */
+        sort?: "asc" | "desc";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PaginatedApiKeyResponse, ErrorResponse>({
         path: `/${orgId}/${bundleId}/api-keys`,
         method: "GET",
+        query: query,
         secure: true,
         format: "json",
         ...params,

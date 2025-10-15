@@ -12,6 +12,7 @@ import {
   Center,
   Loader,
   Paper,
+  Pagination,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
@@ -29,14 +30,25 @@ export function ApiKeysPage() {
   const { bundleId } = useParams<{ bundleId: string }>();
   const [createModalOpened, setCreateModalOpened] = useState(false);
   const [createdKeyData, setCreatedKeyData] = useState<{ key: string; name: string } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const { showError } = useShowBackendError();
 
   const { data: currentUser } = useCurrentUserQuery();
   const orgId = currentUser?.organization?.id || '';
 
-  const { data: apiKeys, isLoading, isError } = useApiKeysQuery(orgId, bundleId || '');
+  const pageSize = 20;
+  const { data, isLoading, isError } = useApiKeysQuery(
+    orgId,
+    bundleId || '',
+    currentPage - 1, // API uses 0-based pagination
+    pageSize
+  );
   const createApiKeyMutation = useCreateApiKeyMutation();
   const deleteApiKeyMutation = useDeleteApiKeyMutation();
+
+  const apiKeys = data?.data || [];
+  const totalPages = data?.totalPages || 0;
+  const totalElements = data?.totalElements || 0;
 
   const handleCreateKey = async (name: string) => {
     try {
@@ -47,6 +59,7 @@ export function ApiKeysPage() {
       });
       
       setCreateModalOpened(false);
+      setCurrentPage(1); // Reset to first page after creating
       
       // Show the created key modal with the full key
       if (result.key) {
@@ -77,6 +90,12 @@ export function ApiKeysPage() {
             bundleId: bundleId || '',
             keyId,
           });
+          
+          // If we deleted the last item on the current page and it's not page 1, go back one page
+          if (apiKeys.length === 1 && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+          }
+          
           notifications.show({
             title: t('common.success'),
             message: t('apps.detail.api_keys.delete.success_message'),
@@ -118,7 +137,7 @@ export function ApiKeysPage() {
     );
   }
 
-  const hasKeys = apiKeys && apiKeys.length > 0;
+  const hasKeys = apiKeys.length > 0;
 
   return (
     <Box>
@@ -129,6 +148,15 @@ export function ApiKeysPage() {
             <Text size="sm" c="dimmed">
               {t('apps.detail.api_keys.subtitle')}
             </Text>
+            {totalElements > 0 && (
+              <Text size="xs" c="dimmed" mt="xs">
+                {t('apps.detail.api_keys.showing_count', {
+                  from: (currentPage - 1) * pageSize + 1,
+                  to: Math.min(currentPage * pageSize, totalElements),
+                  total: totalElements,
+                })}
+              </Text>
+            )}
           </Box>
           <Button
             leftSection={<Key size={16} />}
@@ -214,6 +242,17 @@ export function ApiKeysPage() {
               </Table>
             </Table.ScrollContainer>
           </Paper>
+        )}
+
+        {totalPages > 1 && (
+          <Group justify="center">
+            <Pagination
+              total={totalPages}
+              value={currentPage}
+              onChange={setCurrentPage}
+              withEdges
+            />
+          </Group>
         )}
       </Stack>
 
