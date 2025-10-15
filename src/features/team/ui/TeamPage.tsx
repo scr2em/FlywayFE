@@ -91,6 +91,21 @@ export function TeamPage() {
     }
   };
 
+  const getInvitationStatusBadgeColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'accepted':
+        return 'green';
+      case 'pending':
+        return 'yellow';
+      case 'rejected':
+        return 'red';
+      case 'expired':
+        return 'gray';
+      default:
+        return 'gray';
+    }
+  };
+
   if (isLoadingUser || isLoading) {
     return (
       <Center h="calc(100vh - 120px)">
@@ -163,8 +178,8 @@ export function TeamPage() {
                   <Table.Th>{t('team.table.email')}</Table.Th>
                   <Table.Th>{t('team.table.role')}</Table.Th>
                   <Table.Th>{t('team.table.status')}</Table.Th>
+                  <Table.Th>{t('team.table.invitation_status')}</Table.Th>
                   <Table.Th>{t('team.table.joined')}</Table.Th>
-                  <Table.Th>{t('team.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -211,6 +226,35 @@ export function TeamPage() {
                       </Badge>
                     </Table.Td>
                     <Table.Td>
+                      {member.user.invitationStatus ? (
+                        <Group gap="xs">
+                          <Badge
+                            color={getInvitationStatusBadgeColor(member.user.invitationStatus.status)}
+                            variant="light"
+                          >
+                            {member.user.invitationStatus.status}
+                          </Badge>
+                          {(member.user.invitationStatus.status === 'pending' || 
+                            member.user.invitationStatus.status === 'rejected') && (
+                            <Tooltip label={t('team.resend_invitation')}>
+                              <ActionIcon
+                                variant="subtle"
+                                color="blue"
+                                onClick={() => handleResendInvitation(member.user.id)}
+                                loading={resendingInvitationId === member.user.invitationStatus!.id}
+                              >
+                                <MailPlus size={18} />
+                              </ActionIcon>
+                            </Tooltip>
+                          )}
+                        </Group>
+                      ) : (
+                        <Text size="sm" c="dimmed">
+                          {t('team.no_invitation')}
+                        </Text>
+                      )}
+                    </Table.Td>
+                    <Table.Td>
                       <Text size="sm">
                         {new Date(member.joinedAt).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -218,20 +262,6 @@ export function TeamPage() {
                           day: 'numeric',
                         })}
                       </Text>
-                    </Table.Td>
-                    <Table.Td>
-                      {member.user.invitationStatus?.status === 'pending' && (
-                        <Tooltip label={t('team.resend_invitation')}>
-                          <ActionIcon
-                            variant="subtle"
-                            color="blue"
-                            onClick={() => handleResendInvitation(member.user.id)}
-                            loading={resendingInvitationId === member.user.invitationStatus!.id}
-                          >
-                            <MailPlus size={18} />
-                          </ActionIcon>
-                        </Tooltip>
-                      )}
                     </Table.Td>
                   </Table.Tr>
                 ))}

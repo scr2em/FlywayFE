@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../client';
 import { type CreateInvitationRequest } from '../../../generated-api';
 
@@ -29,6 +29,35 @@ export function useResendInvitationMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['organization-members'] });
+    },
+  });
+}
+
+export function useGetInvitationByToken(token: string) {
+  return useQuery({
+    queryKey: [...INVITATIONS_QUERY_KEY, 'token', token],
+    queryFn: async () => {
+      const response = await apiClient.invitations.getInvitationByToken(token);
+      return response.data;
+    },
+    enabled: !!token,
+  });
+}
+
+export function useAcceptInvitationMutation() {
+  return useMutation({
+    mutationFn: async (token: string) => {
+      const response = await apiClient.invitations.acceptInvitation(token);
+      return response.data;
+    },
+  });
+}
+
+export function useRejectInvitationMutation() {
+  return useMutation({
+    mutationFn: async (token: string) => {
+      const response = await apiClient.invitations.rejectInvitation(token);
+      return response.data;
     },
   });
 }

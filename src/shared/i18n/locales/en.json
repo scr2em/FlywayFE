@@ -114,11 +114,13 @@
     "resend_invitation": "Resend Invitation",
     "resend_success": "Invitation resent successfully",
     "resend_error": "Failed to resend invitation. Please try again.",
+    "no_invitation": "N/A",
     "table": {
       "member": "Member",
       "email": "Email",
       "role": "Role",
       "status": "Status",
+      "invitation_status": "Invitation Status",
       "joined": "Joined",
       "actions": "Actions"
     }
@@ -206,7 +208,28 @@
     "submit_button": "Send Invitation",
     "cancel_button": "Cancel",
     "success_message": "Invitation sent successfully",
-    "error_generic": "Failed to send invitation. Please try again."
+    "error_generic": "Failed to send invitation. Please try again.",
+    "accept": {
+      "title": "You've Been Invited!",
+      "subtitle": "You have been invited to join an organization",
+      "organization": "Organization",
+      "description": "Description",
+      "role": "Role",
+      "invited_by": "Invited By",
+      "email": "Email",
+      "expires_at": "Expires At",
+      "accept_button": "Accept Invitation",
+      "reject_button": "Reject Invitation",
+      "success_message": "Invitation accepted successfully! Redirecting to login...",
+      "reject_success_message": "Invitation rejected successfully.",
+      "error_title": "Invalid Invitation",
+      "error_message": "This invitation link is invalid or has expired.",
+      "expired_message": "This invitation has expired and can no longer be accepted.",
+      "already_accepted_message": "This invitation has already been accepted.",
+      "already_rejected_message": "This invitation has already been rejected.",
+      "redirecting_message": "Redirecting to login page...",
+      "go_to_login": "Go to Login"
+    }
   }
 }
 
