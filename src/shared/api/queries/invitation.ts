@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../client';
 import { type CreateInvitationRequest } from '../../../generated-api';
+import { ORGANIZATION_MEMBERS_QUERY_KEY } from './organization';
 
 export const INVITATIONS_QUERY_KEY = ['invitations'];
 
@@ -13,8 +14,8 @@ export function useCreateInvitationMutation() {
       return response.data;
     },
     onSuccess: () => {
-      // Optionally invalidate members query if needed
-      queryClient.invalidateQueries({ queryKey: ['organization-members'] });
+      // Invalidate members query to refetch the teams page
+      queryClient.invalidateQueries({ queryKey: ORGANIZATION_MEMBERS_QUERY_KEY });
     },
   });
 }
@@ -28,7 +29,7 @@ export function useResendInvitationMutation() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['organization-members'] });
+      queryClient.invalidateQueries({ queryKey: ORGANIZATION_MEMBERS_QUERY_KEY });
     },
   });
 }
