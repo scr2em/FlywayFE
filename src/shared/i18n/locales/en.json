@@ -113,6 +113,7 @@
     "bundles": "Bundles",
     "builds": "Builds",
     "team": "Team",
+    "channels": "Channels",
     "roles": "Roles",
     "analytics": "Analytics",
     "organization": "Organization",
@@ -394,6 +395,55 @@
           "menu_item": "Delete key"
         }
       }
+    }
+  },
+  "channels": {
+    "title": "Channels",
+    "subtitle": "Manage distribution channels ({{count}} channels)",
+    "create_button": "Create Channel",
+    "create_first_channel": "Create Your First Channel",
+    "no_channels": "No channels yet",
+    "no_organization_title": "No Organization",
+    "no_organization_message": "You need to be part of an organization to manage channels.",
+    "error_loading": "Failed to load channels. Please try again.",
+    "created_at": "Created on {{date}}",
+    "badge": "Channel",
+    "load_more": "Load More Channels",
+    "loading_more": "Loading...",
+    "create": {
+      "modal_title": "Create Channel",
+      "name_label": "Channel Name",
+      "name_placeholder": "Enter channel name (e.g., production, staging, beta)",
+      "description_label": "Description (Optional)",
+      "description_placeholder": "Describe this channel's purpose",
+      "submit_button": "Create Channel",
+      "cancel_button": "Cancel",
+      "success_message": "Channel created successfully",
+      "validation": {
+        "name_required": "Channel name is required"
+      }
+    },
+    "update": {
+      "modal_title": "Update Channel",
+      "name_label": "Channel Name",
+      "name_placeholder": "Enter channel name",
+      "description_label": "Description (Optional)",
+      "description_placeholder": "Describe this channel's purpose",
+      "submit_button": "Update Channel",
+      "cancel_button": "Cancel",
+      "success_message": "Channel updated successfully",
+      "menu_item": "Edit channel",
+      "validation": {
+        "name_required": "Channel name is required"
+      }
+    },
+    "delete": {
+      "title": "Delete Channel",
+      "confirmation": "Are you sure you want to delete '{{name}}'? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "success_message": "Channel deleted successfully",
+      "menu_item": "Delete channel"
     }
   }
 }

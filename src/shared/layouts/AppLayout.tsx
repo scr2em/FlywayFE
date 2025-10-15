@@ -12,6 +12,7 @@ import {
   Bell,
   Menu as MenuIcon,
   Folder,
+  Radio,
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';
@@ -48,6 +49,12 @@ export function AppLayout() {
       label: t('navigation.apps'),
       path: '/apps',
       permission: permissions.canReadMobileApp,
+    },
+    {
+      icon: Radio,
+      label: t('navigation.channels'),
+      path: '/channels',
+      permission: null, // Channels are accessible to all organization members
     },
     {
       icon: Users,

@@ -397,6 +397,22 @@ export interface CreateApiKeyRequest {
   name: string;
 }
 
+/** Request to create a new channel */
+export interface CreateChannelRequest {
+  /** Channel name */
+  name: string;
+  /** Channel description */
+  description?: string;
+}
+
+/** Request to update a channel */
+export interface UpdateChannelRequest {
+  /** Channel name */
+  name?: string;
+  /** Channel description */
+  description?: string;
+}
+
 /** API key information */
 export interface ApiKeyResponse {
   /** Unique identifier for the API key */
@@ -442,6 +458,42 @@ export interface PermissionResponse {
   category: string;
   /** Bitwise permission value as a string */
   bitValue: string;
+}
+
+/** Channel information */
+export interface ChannelResponse {
+  /** Channel ID */
+  id: string;
+  /** Channel name */
+  name: string;
+  /** Channel description */
+  description?: string;
+  /** Organization ID */
+  organizationId: string;
+  /**
+   * When the channel was created
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * When the channel was last updated
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
+/** Paginated channel response */
+export interface PaginatedChannelResponse {
+  /** List of channels */
+  data: ChannelResponse[];
+  /** Current page number */
+  page: number;
+  /** Number of items per page */
+  size: number;
+  /** Total number of channels */
+  totalElements: number;
+  /** Total number of pages */
+  totalPages: number;
 }
 
 /** Error response */
@@ -1427,6 +1479,115 @@ export class Api<
     ) =>
       this.request<void, ErrorResponse>({
         path: `/${orgId}/${bundleId}/api-keys/${keyId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Channels
+     * @name GetChannels
+     * @summary Get paginated list of channels
+     * @request GET:/{orgId}/channels
+     * @secure
+     */
+    getChannels: (
+      orgId: string,
+      query?: {
+        /**
+         * Page number (0-based)
+         * @default 0
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         * @default 20
+         */
+        size?: number;
+        /**
+         * Sort direction by creation date
+         * @default "desc"
+         */
+        sort?: "asc" | "desc";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PaginatedChannelResponse, ErrorResponse>({
+        path: `/${orgId}/channels`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Channels
+     * @name CreateChannel
+     * @summary Create a new channel
+     * @request POST:/{orgId}/channels
+     * @secure
+     */
+    createChannel: (
+      orgId: string,
+      data: CreateChannelRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChannelResponse, ErrorResponse>({
+        path: `/${orgId}/channels`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Channels
+     * @name UpdateChannel
+     * @summary Update a channel
+     * @request PUT:/{orgId}/channels/{channelId}
+     * @secure
+     */
+    updateChannel: (
+      orgId: string,
+      channelId: string,
+      data: UpdateChannelRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChannelResponse, ErrorResponse>({
+        path: `/${orgId}/channels/${channelId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Channels
+     * @name DeleteChannel
+     * @summary Delete a channel
+     * @request DELETE:/{orgId}/channels/{channelId}
+     * @secure
+     */
+    deleteChannel: (
+      orgId: string,
+      channelId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, ErrorResponse>({
+        path: `/${orgId}/channels/${channelId}`,
         method: "DELETE",
         secure: true,
         ...params,

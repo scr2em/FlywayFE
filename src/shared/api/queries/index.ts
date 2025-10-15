@@ -28,4 +28,11 @@ export {
   useDeleteBuildMutation,
   BUILDS_QUERY_KEY,
 } from './builds';
+export {
+  useChannelsInfiniteQuery,
+  useCreateChannelMutation,
+  useUpdateChannelMutation,
+  useDeleteChannelMutation,
+  CHANNELS_QUERY_KEY,
+} from './channels';
 

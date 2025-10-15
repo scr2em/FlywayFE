@@ -15,6 +15,7 @@ import {
 } from '../../features/apps';
 import { PermissionsCalculatorPage } from '../../features/permissions-calculator';
 import { AcceptInvitationPage } from '../../features/invitation';
+import { ChannelsPage } from '../../features/channels';
 import { ProtectedRoute, PublicRoute } from '../../shared/lib/router';
 import { AppLayout } from '../../shared/layouts';
 
@@ -74,6 +75,7 @@ export function AppRoutes() {
           <Route path="api-keys" element={<ApiKeysPage />} />
         </Route>
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/channels" element={<ChannelsPage />} />
         <Route path="/analytics" element={<div>Analytics Page (Coming Soon)</div>} />
         <Route path="/organization" element={<OrganizationPage />} />
         <Route path="/settings" element={<div>Settings Page (Coming Soon)</div>} />
