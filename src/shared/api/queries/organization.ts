@@ -84,30 +84,3 @@ export function useRemoveMemberMutation() {
   });
 }
 
-export const CURRENT_USER_MEMBERSHIP_QUERY_KEY = ['currentUserMembership'];
-
-/**
- * Query to get the current user's membership (including role and permissions)
- */
-export function useCurrentUserMembershipQuery(enabled = true) {
-  return useQuery({
-    queryKey: CURRENT_USER_MEMBERSHIP_QUERY_KEY,
-    queryFn: async () => {
-      // Fetch all members and find the current user
-      const response = await apiClient.members.getMembers({ page: 0, limit: 100 });
-      const currentUserResponse = await apiClient.users.getCurrentUser();
-      const currentUserId = currentUserResponse.data.id;
-      
-      // Find current user in members list
-      const currentMember = response.data.data.find(
-        member => member.user.id === currentUserId
-      );
-      
-      return currentMember || null;
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled,
-    retry: false,
-  });
-}
-

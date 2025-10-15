@@ -300,24 +300,3 @@ export function hasPermission(permissionString: string | undefined | null, permi
     return false;
   }
 }
-
-/**
- * Check if a permission string contains any of the specified permissions
- * @param permissionString - The bitwise permissions value as a string
- * @param permissionCodes - Array of permission codes to check
- * @returns true if any of the permissions are present, false otherwise
- */
-export function hasAnyPermission(permissionString: string | undefined | null, permissionCodes: string[]): boolean {
-  return permissionCodes.some(code => hasPermission(permissionString, code));
-}
-
-/**
- * Check if a permission string contains all of the specified permissions
- * @param permissionString - The bitwise permissions value as a string
- * @param permissionCodes - Array of permission codes to check
- * @returns true if all permissions are present, false otherwise
- */
-export function hasAllPermissions(permissionString: string | undefined | null, permissionCodes: string[]): boolean {
-  return permissionCodes.every(code => hasPermission(permissionString, code));
-}
-

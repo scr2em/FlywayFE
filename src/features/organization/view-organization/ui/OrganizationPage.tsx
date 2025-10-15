@@ -22,7 +22,7 @@ import {
   useUpdateOrganizationMutation,
 } from '../../../../shared/api/queries/organization';
 import { useCurrentUserQuery } from '../../../../shared/api/queries/user';
-import { useShowBackendError, usePermission } from '../../../../shared/hooks';
+import { useShowBackendError, usePermissions } from '../../../../shared/hooks';
 import { updateOrganizationSchema, type UpdateOrganizationFormData } from '../model/schema';
 import { ControlledTextInput, ControlledTextArea } from '../../../../shared/controlled-form-fields';
 
@@ -33,7 +33,7 @@ export function OrganizationPage() {
   const { data: organization, isLoading, isError } = useGetOrganizationQuery();
   const updateOrganizationMutation = useUpdateOrganizationMutation();
   const { showError } = useShowBackendError();
-  const { hasPermission: canUpdateOrganization } = usePermission('organization.update');
+  const { canUpdateOrganization } = usePermissions();
 
   const form = useForm<UpdateOrganizationFormData>({
     resolver: zodResolver(updateOrganizationSchema),

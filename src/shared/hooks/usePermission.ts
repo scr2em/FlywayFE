@@ -1,24 +1,24 @@
-import { useMemo } from 'react';
-import { useCurrentUserMembershipQuery } from '../api/queries/organization';
-import { hasPermission, hasAnyPermission, hasAllPermissions } from '../../features/permissions-calculator/model/permissions';
+import { useCurrentUserQuery } from '../api/queries/user';
+import { hasPermission, PERMISSIONS } from '../../features/permissions-calculator/model/permissions';
 
 /**
  * Permission Hooks for checking user permissions
  * 
  * @example
- * // Check single permission
- * const { hasPermission, isLoading } = usePermission('organization.update');
+ * // Use the all-in-one permissions hook (recommended)
+ * const { canDeleteMobileApp, canCreateMobileApp, canUpdateOrganization } = usePermissions();
  * 
- * if (isLoading) return <Loader />;
- * if (!hasPermission) return <AccessDenied />;
+ * @example
+ * // Check single permission
+ * const hasOrgUpdatePermission = usePermission('organization.update');
  * 
  * @example
  * // Check if user has any of multiple permissions
- * const { hasPermission } = useAnyPermission(['member.add', 'member.remove']);
+ * const hasAnyMemberPermission = useAnyPermission(['member.add', 'member.remove']);
  * 
  * @example
  * // Check if user has all specified permissions
- * const { hasPermission } = useAllPermissions(['role.view', 'role.create']);
+ * const hasAllRolePermissions = useAllPermissions(['role.view', 'role.create']);
  * 
  * @example
  * // Get user's permissions value and role
@@ -26,88 +26,81 @@ import { hasPermission, hasAnyPermission, hasAllPermissions } from '../../featur
  */
 
 /**
- * Hook to check if the current user has a specific permission
- * @param permissionCode - The permission code to check (e.g., "organization.update")
- * @param enabled - Whether to enable the query (default: true)
- * @returns Object with permission check result and loading state
+ * Convert permission code to camelCase property name
+ * e.g., "mobile_app.create" -> "canCreateMobileApp"
  */
-export function usePermission(permissionCode: string, enabled = true) {
-  const { data: membership, isLoading } = useCurrentUserMembershipQuery(enabled);
-
-  const hasPermissionResult = useMemo(() => {
-    if (!membership?.role?.permissionsValue) {
-      return false;
-    }
-    return hasPermission(membership.role.permissionsValue, permissionCode);
-  }, [membership, permissionCode]);
-
-  return {
-    hasPermission: hasPermissionResult,
-    isLoading,
-    membership,
-  };
+function permissionCodeToCamelCase(code: string): string {
+  const parts = code.split('.');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    console.warn(`Invalid permission code format: ${code}`);
+    return 'canUnknown';
+  }
+  
+  const category = parts[0];
+  const action = parts[1];
+  const categoryParts = category.split('_');
+  const actionParts = action.split('_');
+  
+  const camelCategory = categoryParts
+    .map((part, index) => index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  
+  const camelAction = actionParts
+    .map((part, index) => index === 0 ? part.charAt(0).toUpperCase() + part.slice(1) : part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  
+  return `can${camelAction}${camelCategory.charAt(0).toUpperCase() + camelCategory.slice(1)}`;
 }
 
 /**
- * Hook to check if the current user has any of the specified permissions
- * @param permissionCodes - Array of permission codes to check
+ * Hook to get all permissions as boolean values
  * @param enabled - Whether to enable the query (default: true)
- * @returns Object with permission check result and loading state
+ * @returns Object with all permissions as boolean values (e.g., { canCreateMobileApp: true, canDeleteMobileApp: false, ... })
+ * 
+ * @example
+ * const { canCreateMobileApp, canDeleteMobileApp, canUpdateOrganization } = usePermissions();
+ * 
+ * if (canCreateMobileApp) {
+ *   // Show create button
+ * }
  */
-export function useAnyPermission(permissionCodes: string[], enabled = true) {
-  const { data: membership, isLoading } = useCurrentUserMembershipQuery(enabled);
+export function usePermissions(enabled = true) {
+  const { data: user } = useCurrentUserQuery(enabled);
+  const permissionsValue = user?.role?.permissionsValue;
 
-  const hasAnyPermissionResult = useMemo(() => {
-    if (!membership?.role?.permissionsValue) {
-      return false;
-    }
-    return hasAnyPermission(membership.role.permissionsValue, permissionCodes);
-  }, [membership, permissionCodes]);
+  const permissions: Record<string, boolean> = {};
 
-  return {
-    hasPermission: hasAnyPermissionResult,
-    isLoading,
-    membership,
+  for (const permission of PERMISSIONS) {
+    const key = permissionCodeToCamelCase(permission.code);
+    permissions[key] = hasPermission(permissionsValue, permission.code);
+  }
+
+  return permissions as {
+    canUpdateOrganization: boolean;
+    canViewMember: boolean;
+    canAddMember: boolean;
+    canRemoveMember: boolean;
+    canUpdateRoleMember: boolean;
+    canViewRole: boolean;
+    canCreateRole: boolean;
+    canUpdateRole: boolean;
+    canDeleteRole: boolean;
+    canAssignPermissionsRole: boolean;
+    canViewPermission: boolean;
+    canViewInvitation: boolean;
+    canCreateInvitation: boolean;
+    canCancelInvitation: boolean;
+    canViewUser: boolean;
+    canUpdateUser: boolean;
+    canDeleteUser: boolean;
+    canCreateDeployment: boolean;
+    canViewDeployment: boolean;
+    canRollbackDeployment: boolean;
+    canViewBilling: boolean;
+    canManageBilling: boolean;
+    canReadMobileApp: boolean;
+    canCreateMobileApp: boolean;
+    canUpdateMobileApp: boolean;
+    canDeleteMobileApp: boolean;
   };
 }
-
-/**
- * Hook to check if the current user has all of the specified permissions
- * @param permissionCodes - Array of permission codes to check
- * @param enabled - Whether to enable the query (default: true)
- * @returns Object with permission check result and loading state
- */
-export function useAllPermissions(permissionCodes: string[], enabled = true) {
-  const { data: membership, isLoading } = useCurrentUserMembershipQuery(enabled);
-
-  const hasAllPermissionsResult = useMemo(() => {
-    if (!membership?.role?.permissionsValue) {
-      return false;
-    }
-    return hasAllPermissions(membership.role.permissionsValue, permissionCodes);
-  }, [membership, permissionCodes]);
-
-  return {
-    hasPermission: hasAllPermissionsResult,
-    isLoading,
-    membership,
-  };
-}
-
-/**
- * Hook to get the current user's permissions value
- * @param enabled - Whether to enable the query (default: true)
- * @returns Object with permissions value, membership data, and loading state
- */
-export function useUserPermissions(enabled = true) {
-  const { data: membership, isLoading, error } = useCurrentUserMembershipQuery(enabled);
-
-  return {
-    permissionsValue: membership?.role?.permissionsValue || null,
-    role: membership?.role || null,
-    membership,
-    isLoading,
-    error,
-  };
-}
-

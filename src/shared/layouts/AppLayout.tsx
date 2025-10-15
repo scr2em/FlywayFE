@@ -18,8 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';
-import { useUserPermissions } from '../hooks';
-import { hasPermission } from '../../features/permissions-calculator';
+import { usePermissions } from '../hooks';
 
 export function AppLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -27,7 +26,7 @@ export function AppLayout() {
   const { t } = useTranslation();
   const { logout } = useAuth();
   const { data: user } = useCurrentUserQuery();
-  const { permissionsValue } = useUserPermissions();
+      const permissions= usePermissions();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,24 +50,24 @@ export function AppLayout() {
       icon: Folder,
       label: t('navigation.apps'),
       path: '/apps',
-      permission: 'mobile_app.read',
+      permission: permissions.canReadMobileApp,
     },
     {
       icon: Radio,
       label: t('navigation.live_updates'),
-      permission: 'deployment.view',
+      permission: permissions.canViewDeployment,
       children: [
         {
           icon: Package,
           label: t('navigation.bundles'),
           path: '/bundles',
-          permission: 'deployment.view',
+          permission: permissions.canViewDeployment,
         },
         {
           icon: Boxes,
           label: t('navigation.builds'),
           path: '/builds',
-          permission: 'deployment.view',
+          permission: permissions.canViewDeployment,
         },
       ],
     },
@@ -76,7 +75,7 @@ export function AppLayout() {
       icon: Users,
       label: t('navigation.team'),
       path: '/team',
-      permission: 'member.view',
+      permission: permissions.canViewMember,
     },
     {
       icon: Building,
@@ -87,20 +86,7 @@ export function AppLayout() {
   ];
 
   // Filter navigation items based on user permissions
-  const visibleNavigationItems = navigationItems.filter((item) => {
-    if (!item.permission) return true; // No permission required
-    return hasPermission(permissionsValue, item.permission);
-  }).map((item) => {
-    // Filter children if item has children
-    if (item.children) {
-      const visibleChildren = item.children.filter((child) => {
-        if (!child.permission) return true;
-        return hasPermission(permissionsValue, child.permission);
-      });
-      return { ...item, children: visibleChildren };
-    }
-    return item;
-  });
+  const visibleNavigationItems = navigationItems.filter((item) => item.permission === null || item.permission);
 
   return (
     <AppShell

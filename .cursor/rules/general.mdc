@@ -21,5 +21,6 @@ alwaysApply: true
 15. when dealing with styles, use design tokens instead of hard coded values, THIS IS CRITICAL and IMPORTANT, don't use useMantineTheme or import theme, use Style props
 16. when dealing with pagination use useInfiniteQuery from react query
 17. ask for my confirmation whenver you are going to useEffect because generally we won't need it
+19. don't ever user useMemo, memo, or useCallback
 
 

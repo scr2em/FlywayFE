@@ -240,6 +240,10 @@ components:
           allOf:
             - $ref: '#/components/schemas/UserOrganizationResponse'
           description: Organization information (null if user is not in an organization)
+        role:
+          $ref: '#/components/schemas/RoleResponse'
+          nullable: true
+          description: Role information (null if user is not in an organization)
         invitationStatus:
           $ref: '#/components/schemas/InvitationStatusResponse'
           nullable: true
@@ -483,6 +487,32 @@ components:
           type: string
           format: date-time
           description: When the application was last updated
+
+    PermissionResponse:
+      type: object
+      description: Permission information
+      required:
+        - code
+        - label
+        - description
+        - category
+        - bitValue
+      properties:
+        code:
+          type: string
+          description: Permission code (e.g., "organization.update")
+        label:
+          type: string
+          description: Human-readable permission label
+        description:
+          type: string
+          description: Permission description
+        category:
+          type: string
+          description: Permission category (e.g., "organization", "member", "role")
+        bitValue:
+          type: string
+          description: Bitwise permission value as a string
 
     ErrorResponse:
       type: object
@@ -882,6 +912,29 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoleResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /permissions:
+    get:
+      operationId: getPermissions
+      summary: Get all available permissions
+      description: Returns all permissions that can be assigned to roles
+      tags:
+        - Permissions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Permissions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PermissionResponse'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '403':

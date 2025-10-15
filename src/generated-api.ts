@@ -152,6 +152,8 @@ export interface UserResponse {
   status: UserStatusResponse;
   /** Organization information (null if user is not in an organization) */
   organization?: UserOrganizationResponse | null;
+  /** Role information (null if user is not in an organization) */
+  role?: RoleResponse | null;
   /** Invitation status (null for organization owners who were not invited) */
   invitationStatus?: InvitationStatusResponse | null;
   /**
@@ -322,6 +324,20 @@ export interface MobileApplicationResponse {
    * @format date-time
    */
   updatedAt?: string;
+}
+
+/** Permission information */
+export interface PermissionResponse {
+  /** Permission code (e.g., "organization.update") */
+  code: string;
+  /** Human-readable permission label */
+  label: string;
+  /** Permission description */
+  description: string;
+  /** Permission category (e.g., "organization", "member", "role") */
+  category: string;
+  /** Bitwise permission value as a string */
+  bitValue: string;
 }
 
 /** Error response */
@@ -788,6 +804,25 @@ export class Api<
     getRoles: (params: RequestParams = {}) =>
       this.request<RoleResponse[], ErrorResponse>({
         path: `/roles`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
+  permissions = {
+    /**
+     * @description Returns all permissions that can be assigned to roles
+     *
+     * @tags Permissions
+     * @name GetPermissions
+     * @summary Get all available permissions
+     * @request GET:/permissions
+     * @secure
+     */
+    getPermissions: (params: RequestParams = {}) =>
+      this.request<PermissionResponse[], ErrorResponse>({
+        path: `/permissions`,
         method: "GET",
         secure: true,
         format: "json",

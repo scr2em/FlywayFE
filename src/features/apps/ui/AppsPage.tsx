@@ -24,7 +24,7 @@ import {
   useDeleteMobileAppMutation,
 } from '../../../shared/api/queries';
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
-import { useShowBackendError, usePermission } from '../../../shared/hooks';
+import { useShowBackendError, usePermissions } from '../../../shared/hooks';
 import { CreateAppModal } from './CreateAppModal';
 
 export function AppsPage() {
@@ -34,8 +34,7 @@ export function AppsPage() {
   const { data: apps, isLoading, isError } = useMobileAppsQuery();
   const deleteAppMutation = useDeleteMobileAppMutation();
   const { showError } = useShowBackendError();
-  const { hasPermission: canCreateApp } = usePermission('mobile_app.create');
-  const { hasPermission: canDeleteApp } = usePermission('mobile_app.delete');
+  const { canCreateMobileApp, canDeleteMobileApp } = usePermissions();
 
   const handleDeleteApp = (appId: string, appName: string) => {
     modals.openConfirmModal({
@@ -113,7 +112,7 @@ export function AppsPage() {
               {t('apps.subtitle', { count: appsList.length })}
             </Text>
           </Box>
-          {canCreateApp && (
+          {canCreateMobileApp && (
             <Button
               leftSection={<Plus size={18} />}
               variant="gradient"
@@ -134,7 +133,7 @@ export function AppsPage() {
                 <Text c="dimmed" size="lg">
                   {t('apps.no_apps')}
                 </Text>
-                {canCreateApp && (
+                {canCreateMobileApp && (
                   <Button
                     leftSection={<Plus size={18} />}
                     onClick={() => setCreateModalOpened(true)}
@@ -174,7 +173,7 @@ export function AppsPage() {
                       </Badge>
                     </Box>
                     
-                    {canDeleteApp && (
+                    {canDeleteMobileApp && (
                       <Menu shadow="md" width={200} position="bottom-end">
                         <Menu.Target>
                           <ActionIcon variant="subtle" color="gray">

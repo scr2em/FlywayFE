@@ -26,7 +26,7 @@ import { useOrganizationMembersQuery, useRemoveMemberMutation } from '../../../s
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
 import { InviteUserModal } from '../../invitation';
 import { useResendInvitationMutation } from '../../../shared/api/queries/invitation';
-import { useShowBackendError, usePermission } from '../../../shared/hooks';
+import { useShowBackendError, usePermissions } from '../../../shared/hooks';
 
 export function TeamPage() {
   const { t } = useTranslation();
@@ -45,8 +45,7 @@ export function TeamPage() {
   const resendInvitationMutation = useResendInvitationMutation();
   const removeMemberMutation = useRemoveMemberMutation();
   const { showError } = useShowBackendError();
-  const { hasPermission: canInviteMembers } = usePermission('invitation.create');
-  const { hasPermission: canRemoveMembers } = usePermission('member.remove');
+  const { canCreateInvitation, canRemoveMember } = usePermissions();
 
   const handleResendInvitation = async (userId: string) => {
     setResendingUserId(userId);
@@ -188,7 +187,7 @@ export function TeamPage() {
               {t('team.subtitle', { count: totalMembers })}
             </Text>
           </Box>
-          {canInviteMembers && (
+          {canCreateInvitation && (
             <Button
               leftSection={<UserPlus size={18} />}
               variant="gradient"
@@ -297,7 +296,7 @@ export function TeamPage() {
                       </Text>
                     </Table.Td>
                     <Table.Td>
-                      {canRemoveMembers && (
+                      {canRemoveMember && (
                         <Menu shadow="md" width={200} position="bottom-end">
                           <Menu.Target>
                             <ActionIcon variant="subtle" color="gray">
