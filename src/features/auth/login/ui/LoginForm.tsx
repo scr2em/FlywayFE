@@ -38,9 +38,6 @@ export function LoginForm() {
         navigate('/create-organization');
       } else {
         const url = `http://${response.user.organization.subdomain}.${import.meta.env.VITE_APP_DOMAIN}/dashboard`;
-        console.log(url);
-        console.log(import.meta.env);
-        alert(url);
         window.open(url, '_self');
       }
     } catch (error: any) {
