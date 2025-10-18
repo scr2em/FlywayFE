@@ -16,12 +16,22 @@ import {
 import { PermissionsCalculatorPage } from '../../features/permissions-calculator';
 import { AcceptInvitationPage } from '../../features/invitation';
 import { ChannelsPage } from '../../features/channels';
+import { LandingPage } from '../../features/landing';
 import { ProtectedRoute, PublicRoute } from '../../shared/lib/router';
 import { AppLayout } from '../../shared/layouts';
 
 export function AppRoutes() {
   return (
     <Routes>
+      <Route
+        path="/"
+        index
+        element={
+          <PublicRoute>
+            <LandingPage />
+          </PublicRoute>
+        }
+      />
       <Route
         path="/login"
         element={
@@ -82,7 +92,7 @@ export function AppRoutes() {
         <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

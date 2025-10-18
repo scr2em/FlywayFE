@@ -460,6 +460,65 @@
       "success_message": "Channel deleted successfully",
       "menu_item": "Delete channel"
     }
+  },
+  "landing": {
+    "hero": {
+      "title": "Deploy Mobile Apps with Confidence",
+      "subtitle": "Streamline your mobile app deployment process with powerful build management, channel distribution, and team collaboration tools.",
+      "cta_primary": "Get Started",
+      "cta_secondary": "Learn More"
+    },
+    "features": {
+      "title": "Everything you need to deploy mobile apps",
+      "subtitle": "Powerful features designed for modern development teams",
+      "build_management": {
+        "title": "Build Management",
+        "description": "Upload, organize, and track your mobile app builds with version control and metadata management."
+      },
+      "channel_distribution": {
+        "title": "Channel Distribution",
+        "description": "Create and manage distribution channels for different environments like production, staging, and beta."
+      },
+      "team_collaboration": {
+        "title": "Team Collaboration",
+        "description": "Invite team members, manage roles and permissions, and collaborate effectively on app deployments."
+      },
+      "api_integration": {
+        "title": "API Integration",
+        "description": "Seamlessly integrate with your CI/CD pipeline using our comprehensive REST API."
+      }
+    },
+    "benefits": {
+      "title": "Why choose Flyway?",
+      "faster_deployments": {
+        "title": "Faster Deployments",
+        "description": "Reduce deployment time from hours to minutes with our streamlined process."
+      },
+      "better_organization": {
+        "title": "Better Organization",
+        "description": "Keep your builds organized with clear versioning and channel management."
+      },
+      "team_efficiency": {
+        "title": "Team Efficiency",
+        "description": "Enable your team to work together seamlessly with role-based access control."
+      },
+      "reliable_platform": {
+        "title": "Reliable Platform",
+        "description": "Built for scale with enterprise-grade reliability and security."
+      }
+    },
+    "cta": {
+      "title": "Ready to streamline your mobile app deployments?",
+      "subtitle": "Join thousands of developers who trust Flyway for their mobile app deployment needs.",
+      "button": "Start Free Trial"
+    },
+    "navigation": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "docs": "Documentation",
+      "login": "Login",
+      "signup": "Sign Up"
+    }
   }
 }
 
