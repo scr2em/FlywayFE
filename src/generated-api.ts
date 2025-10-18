@@ -63,6 +63,13 @@ export interface RefreshTokenRequest {
 export interface CreateOrganizationRequest {
   /** Organization name */
   name: string;
+  /**
+   * Organization subdomain (lowercase alphanumeric with hyphens, 3-63 characters)
+   * @minLength 3
+   * @maxLength 63
+   * @pattern ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$
+   */
+  subdomain: string;
   /** Organization description */
   description?: string;
 }
@@ -174,6 +181,8 @@ export interface UserOrganizationResponse {
   id: string;
   /** Organization name */
   name: string;
+  /** Organization subdomain */
+  subdomain: string;
 }
 
 /** User status information */
@@ -200,6 +209,8 @@ export interface OrganizationResponse {
   id: string;
   /** Organization name */
   name: string;
+  /** Organization subdomain */
+  subdomain: string;
   /** Organization description */
   description?: string;
   /**
@@ -491,6 +502,59 @@ export interface PaginatedChannelResponse {
   /** Number of items per page */
   size: number;
   /** Total number of channels */
+  totalElements: number;
+  /** Total number of pages */
+  totalPages: number;
+}
+
+/** Audit log entry */
+export interface AuditLogResponse {
+  /** Unique identifier for the audit log entry */
+  id: string;
+  /** ID of the user who performed the action */
+  userId?: string;
+  /** ID of the organization */
+  organizationId?: string;
+  /** Action performed (e.g., MOBILE_APP_CREATED, BUILD_UPLOADED) */
+  action: string;
+  /** Type of resource affected (e.g., MOBILE_APPLICATION, BUILD) */
+  resourceType?: string;
+  /** ID of the affected resource */
+  resourceId?: string;
+  /** Name of the affected resource */
+  resourceName?: string;
+  /** HTTP method used (GET, POST, PUT, DELETE) */
+  httpMethod?: string;
+  /** API endpoint called */
+  endpoint?: string;
+  /** IP address of the user */
+  ipAddress?: string;
+  /** User agent string */
+  userAgent?: string;
+  /** Request body (if applicable) */
+  requestBody?: string;
+  /** HTTP response status code */
+  responseStatus?: number;
+  /** Error message (if action failed) */
+  errorMessage?: string;
+  /** Additional metadata in JSON format */
+  metadata?: string;
+  /**
+   * When the action occurred
+   * @format date-time
+   */
+  createdAt: string;
+}
+
+/** Paginated audit log response */
+export interface PaginatedAuditLogResponse {
+  /** List of audit log entries */
+  data: AuditLogResponse[];
+  /** Current page number */
+  page: number;
+  /** Number of items per page */
+  size: number;
+  /** Total number of audit log entries */
   totalElements: number;
   /** Total number of pages */
   totalPages: number;
@@ -1643,6 +1707,61 @@ export class Api<
         method: "POST",
         body: data,
         type: ContentType.FormData,
+        format: "json",
+        ...params,
+      }),
+  };
+  auditLogs = {
+    /**
+     * @description Retrieve paginated audit logs with optional filtering by action, resource type, user, and date range
+     *
+     * @tags Audit Logs
+     * @name GetAuditLogs
+     * @summary Get audit logs for an organization
+     * @request GET:/audit-logs
+     * @secure
+     */
+    getAuditLogs: (
+      query?: {
+        /** Filter by action (e.g., MOBILE_APP_CREATED) */
+        action?: string;
+        /** Filter by resource type (e.g., MOBILE_APPLICATION) */
+        resourceType?: string;
+        /** Filter by user ID */
+        userId?: string;
+        /**
+         * Filter by start date
+         * @format date-time
+         */
+        startDate?: string;
+        /**
+         * Filter by end date
+         * @format date-time
+         */
+        endDate?: string;
+        /**
+         * Page number (0-indexed)
+         * @default 0
+         */
+        page?: number;
+        /**
+         * Page size
+         * @default 20
+         */
+        size?: number;
+        /**
+         * Sort order by created date
+         * @default "desc"
+         */
+        sort?: "asc" | "desc";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PaginatedAuditLogResponse, ErrorResponse>({
+        path: `/audit-logs`,
+        method: "GET",
+        query: query,
+        secure: true,
         format: "json",
         ...params,
       }),

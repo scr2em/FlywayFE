@@ -1,17 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import {  Button, Stack } from '@mantine/core';
+import {  Button, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { Building2 } from 'lucide-react';
+import { Building2, Globe } from 'lucide-react';
 import { createOrganizationSchema, type CreateOrganizationFormData } from '../model/schema';
 import { useCreateOrganizationMutation } from '../../../../shared/api/queries';
-import { useNavigate } from 'react-router';
 import { ControlledTextInput } from '../../../../shared/controlled-form-fields/ControlledTextInput';
 
 export function CreateOrganizationForm() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const createOrgMutation = useCreateOrganizationMutation();
 
   const {
@@ -30,7 +28,11 @@ export function CreateOrganizationForm() {
         message: t('organization.create.success_message'),
         color: 'green',
       });
-      navigate('/dashboard');
+
+      const url = `http://${data.subdomain}.${import.meta.env.VITE_APP_DOMAIN}/dashboard`;
+
+      window.open(url, '_self');
+
     } catch (error: any) {
       notifications.show({
         title: t('common.error'),
@@ -51,6 +53,19 @@ export function CreateOrganizationForm() {
         leftSection={<Building2 size={18} />}
         size="md"
       />
+
+      <ControlledTextInput
+        control={control}
+        name="subdomain"
+        label={t('organization.create.subdomain_label')}
+        placeholder={t('organization.create.subdomain_placeholder')}
+        leftSection={<Globe size={18} />}
+        size="md"
+      />
+      
+      <Text size="sm" c="dimmed">
+        {t('organization.create.subdomain_help')}
+      </Text>
 
         <Button
           type="submit"

@@ -10,7 +10,7 @@ export function BundlesPage() {
       <Title order={2} mb="lg">
         {t('apps.detail.bundles.title')}
       </Title>
-      <Card withBorder shadow="sm" padding="xl" radius="md">
+      <Card withBorder  padding="xl" radius="md">
         <Center p="xl">
           <Box ta="center">
             <Package size={48} strokeWidth={1.5} style={{ margin: '0 auto', opacity: 0.5 }} />

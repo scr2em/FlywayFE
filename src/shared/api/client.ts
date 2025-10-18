@@ -1,14 +1,15 @@
 import { Api } from '../../generated-api';
 import axios from 'axios';
+import { tokenStorage } from '../lib/cookies';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_URL 
 });
 
 // Add request interceptor to include auth token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = tokenStorage.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,21 +30,20 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = tokenStorage.getRefreshToken();
         if (refreshToken) {
           const api = new Api();
           const response = await api.auth.refreshToken({ refreshToken });
           
-          localStorage.setItem('accessToken', response.data.accessToken);
-          localStorage.setItem('refreshToken', response.data.refreshToken);
+          tokenStorage.setAccessToken(response.data.accessToken);
+          tokenStorage.setRefreshToken(response.data.refreshToken);
 
           originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
         // Clear tokens and redirect to login
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        tokenStorage.clearTokens();
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
@@ -54,7 +54,7 @@ axiosInstance.interceptors.response.use(
 );
 
 export const apiClient = new Api({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_URL 
 });
 
 // Override the axios instance

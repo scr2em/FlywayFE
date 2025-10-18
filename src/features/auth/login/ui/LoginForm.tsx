@@ -37,7 +37,11 @@ export function LoginForm() {
       if (!response.user.organization) {
         navigate('/create-organization');
       } else {
-        navigate('/dashboard');
+        const url = `http://${response.user.organization.subdomain}.${import.meta.env.VITE_APP_DOMAIN}/dashboard`;
+        console.log(url);
+        console.log(import.meta.env);
+        alert(url);
+        window.open(url, '_self');
       }
     } catch (error: any) {
       notifications.show({
