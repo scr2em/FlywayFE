@@ -23,11 +23,13 @@ import {
   Folder,
 } from 'lucide-react';
 import { useCurrentUserQuery } from '../../../shared/api/queries/user';
+import { useCurrentOrganization } from '../../../shared/hooks';
 import { useNavigate } from 'react-router';
 
 export function DashboardPage() {
   const { t } = useTranslation();
   const { data: user, isLoading } = useCurrentUserQuery();
+  const { currentOrganization, hasOrganizations } = useCurrentOrganization();
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -88,7 +90,7 @@ export function DashboardPage() {
                     {t('dashboard.stats.team_members')}
                   </Text>
                   <Text fw={700} size="xl">
-                    {user.organization ? '8' : '1'}
+                    {hasOrganizations ? '8' : '1'}
                   </Text>
                 </div>
                 <ThemeIcon
@@ -134,7 +136,7 @@ export function DashboardPage() {
                     {t('dashboard.stats.organizations')}
                   </Text>
                   <Text fw={700} size="xl">
-                    {user.organization ? '1' : '0'}
+                    {hasOrganizations ? '1' : '0'}
                   </Text>
                 </div>
                 <ThemeIcon
@@ -210,7 +212,7 @@ export function DashboardPage() {
                         {t('dashboard.organization')}
                       </Text>
                       <Text fw={500}>
-                        {user.organization?.name || t('dashboard.no_organization')}
+                        {currentOrganization?.organization?.name || t('dashboard.no_organization')}
                       </Text>
                     </div>
                   </Group>
@@ -256,7 +258,7 @@ export function DashboardPage() {
               >
                 {t('dashboard.view_profile')}
               </Button>
-              {!user.organization && (
+              {!hasOrganizations && (
                 <Button
                   leftSection={<Building size={18} />}
                   variant="light"

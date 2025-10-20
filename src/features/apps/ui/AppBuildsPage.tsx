@@ -21,8 +21,8 @@ import { useState } from 'react';
 import { MoreVertical, Trash2, AlertCircle, Package } from 'lucide-react';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import { useBuildsQuery, useDeleteBuildMutation, useCurrentUserQuery } from '../../../shared/api/queries';
-import { useShowBackendError } from '../../../shared/hooks';
+import { useBuildsQuery, useDeleteBuildMutation } from '../../../shared/api/queries';
+import { useShowBackendError, useCurrentOrganization } from '../../../shared/hooks';
 import type { BuildResponse } from '../../../generated-api';
 
 export function AppBuildsPage() {
@@ -31,8 +31,8 @@ export function AppBuildsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { showError } = useShowBackendError();
 
-  const { data: currentUser } = useCurrentUserQuery();
-  const orgId = currentUser?.organization?.id || '';
+  const { currentOrganization } = useCurrentOrganization();
+  const orgId = currentOrganization?.organization?.id || '';
 
   const pageSize = 10;
   const { data, isLoading, isError } = useBuildsQuery(

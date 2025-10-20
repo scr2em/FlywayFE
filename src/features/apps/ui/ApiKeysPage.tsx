@@ -20,8 +20,8 @@ import { useState } from 'react';
 import { MoreVertical, Trash2, AlertCircle, Key } from 'lucide-react';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import { useApiKeysQuery, useCreateApiKeyMutation, useDeleteApiKeyMutation, useCurrentUserQuery } from '../../../shared/api/queries';
-import { useShowBackendError } from '../../../shared/hooks';
+import { useApiKeysQuery, useCreateApiKeyMutation, useDeleteApiKeyMutation } from '../../../shared/api/queries';
+import { useShowBackendError, useCurrentOrganization } from '../../../shared/hooks';
 import { CreateApiKeyModal } from './CreateApiKeyModal';
 import { ApiKeyCreatedModal } from './ApiKeyCreatedModal';
 
@@ -33,8 +33,8 @@ export function ApiKeysPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { showError } = useShowBackendError();
 
-  const { data: currentUser } = useCurrentUserQuery();
-  const orgId = currentUser?.organization?.id || '';
+  const { currentOrganization } = useCurrentOrganization();
+  const orgId = currentOrganization?.organization?.id || '';
 
   const pageSize = 10;
   const { data, isLoading, isError } = useApiKeysQuery(

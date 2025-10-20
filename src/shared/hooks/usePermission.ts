@@ -1,6 +1,6 @@
-import { useCurrentUserQuery } from '../api/queries/user';
 import { usePermissionsQuery } from '../api/queries';
 import { hasPermission } from '../../features/permissions-calculator/model/permissions';
+import { useCurrentOrganization } from './useCurrentOrganization';
 
 
 /**
@@ -42,10 +42,10 @@ function permissionCodeToCamelCase(code: string): string {
  *   // Show create button
  * }
  */
-export function usePermissions(enabled = true) {
-  const { data: user } = useCurrentUserQuery(enabled);
+export function usePermissions() {
+  const { currentOrganization } = useCurrentOrganization();
   const { data: permissionDefinitions } = usePermissionsQuery();
-  const permissionsValue = user?.role?.permissionsValue;
+  const permissionsValue = currentOrganization?.role?.permissionsValue;
 
   const permissions: Record<string, boolean> = {};
 

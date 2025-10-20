@@ -21,16 +21,15 @@ import {
   useGetOrganizationQuery,
   useUpdateOrganizationMutation,
 } from '../../../../shared/api/queries/organization';
-import { useCurrentUserQuery } from '../../../../shared/api/queries/user';
-import { useShowBackendError, usePermissions } from '../../../../shared/hooks';
+import { useShowBackendError, usePermissions, useCurrentOrganization } from '../../../../shared/hooks';
 import { updateOrganizationSchema, type UpdateOrganizationFormData } from '../model/schema';
 import { ControlledTextInput, ControlledTextArea } from '../../../../shared/controlled-form-fields';
 
 export function OrganizationPage() {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
-  const { data: currentUser, isLoading: isLoadingUser } = useCurrentUserQuery();
-  const { data: organization, isLoading, isError } = useGetOrganizationQuery();
+  const { currentOrganization, isLoading: isLoadingUser } = useCurrentOrganization();
+  const { data: organization, isLoading, isError } = useGetOrganizationQuery(currentOrganization?.organization?.subdomain);
   const updateOrganizationMutation = useUpdateOrganizationMutation();
   const { showError } = useShowBackendError();
   const { canUpdateOrganization } = usePermissions();
@@ -70,7 +69,7 @@ export function OrganizationPage() {
     );
   }
 
-  if (!currentUser?.organization) {
+  if (!currentOrganization) {
     return (
       <Box>
         <Alert

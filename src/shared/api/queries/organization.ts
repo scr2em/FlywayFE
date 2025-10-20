@@ -21,13 +21,17 @@ export function useCreateOrganizationMutation() {
   });
 }
 
-export function useGetOrganizationQuery() {
+export function useGetOrganizationQuery(subdomain?: string) {
   return useQuery({
-    queryKey: ORGANIZATION_QUERY_KEY,
+    queryKey: [...ORGANIZATION_QUERY_KEY, subdomain],
     queryFn: async () => {
-      const response = await apiClient.organizations.getCurrentOrganization();
+      if (!subdomain) {
+        throw new Error('Subdomain is required');
+      }
+      const response = await apiClient.organizations.getOrganizationBySubdomain(subdomain);
       return response.data;
     },
+    enabled: !!subdomain,
   });
 }
 

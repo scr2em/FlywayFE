@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useCurrentUserQuery } from '../api/queries/user';
-import { usePermissions } from '../hooks';
+import { usePermissions, useCurrentOrganization } from '../hooks';
 
 export function AppLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -24,7 +24,8 @@ export function AppLayout() {
   const { t } = useTranslation();
   const { logout } = useAuth();
   const { data: user } = useCurrentUserQuery();
-      const permissions= usePermissions();
+  const { currentOrganization } = useCurrentOrganization();
+  const permissions = usePermissions();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -191,7 +192,7 @@ export function AppLayout() {
           </Box>
         </AppShell.Section>
 
-        {user?.organization && (
+        {currentOrganization && (
           <AppShell.Section>
             <Box
               p="md"
@@ -205,7 +206,7 @@ export function AppLayout() {
                 </ThemeIcon>
                 <Box style={{ flex: 1 }}>
                   <Text size="sm" fw={600}>
-                    {user.organization.name}
+                    {currentOrganization.organization.name}
                   </Text>
                   <Text size="xs" c="dimmed">
                     {t('navigation.organization_info')}

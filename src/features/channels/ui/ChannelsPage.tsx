@@ -24,8 +24,7 @@ import {
   useChannelsInfiniteQuery,
   useDeleteChannelMutation,
 } from '../../../shared/api/queries/channels';
-import { useCurrentUserQuery } from '../../../shared/api/queries/user';
-import { useShowBackendError } from '../../../shared/hooks';
+import { useShowBackendError, useCurrentOrganization } from '../../../shared/hooks';
 import { CreateChannelModal } from './CreateChannelModal';
 import { UpdateChannelModal } from './UpdateChannelModal';
 import type { ChannelResponse } from '../../../generated-api';
@@ -38,8 +37,8 @@ export function ChannelsPage() {
     channel: ChannelResponse | null;
   }>({ opened: false, channel: null });
 
-  const { data: currentUser, isLoading: isLoadingUser } = useCurrentUserQuery();
-  const orgId = currentUser?.organization?.id || '';
+  const { currentOrganization, isLoading: isLoadingUser } = useCurrentOrganization();
+  const orgId = currentOrganization?.organization?.id || '';
   
   const {
     data,
@@ -90,7 +89,7 @@ export function ChannelsPage() {
     );
   }
 
-  if (!currentUser?.organization) {
+  if (!currentOrganization) {
     return (
       <Box>
         <Alert

@@ -34,10 +34,17 @@ export function SignupForm() {
       });
       
       // Redirect to organization creation if user doesn't have one
-      if (!response.user.organization) {
+      if (!response.user.organizations || response.user.organizations.length === 0) {
         navigate('/create-organization');
       } else {
-        navigate('/dashboard');
+        // Redirect to the first organization
+        const firstOrg = response.user.organizations[0];
+        if (firstOrg) {
+          const url = `http://${firstOrg.organization.subdomain}.${import.meta.env.VITE_APP_DOMAIN}/dashboard`;
+          window.open(url, '_self');
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (error: any) {
       notifications.show({

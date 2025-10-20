@@ -24,15 +24,14 @@ import {
   useMobileAppsQuery,
   useDeleteMobileAppMutation,
 } from '../../../shared/api/queries';
-import { useCurrentUserQuery } from '../../../shared/api/queries/user';
-import { useShowBackendError, usePermissions } from '../../../shared/hooks';
+import { useShowBackendError, usePermissions, useCurrentOrganization } from '../../../shared/hooks';
 import { CreateAppModal } from './CreateAppModal';
 
 export function AppsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [createModalOpened, setCreateModalOpened] = useState(false);
-  const { data: currentUser, isLoading: isLoadingUser } = useCurrentUserQuery();
+  const { hasOrganizations, isLoading: isLoadingUser } = useCurrentOrganization();
   const { data: apps, isLoading, isError } = useMobileAppsQuery();
   const deleteAppMutation = useDeleteMobileAppMutation();
   const { showError } = useShowBackendError();
@@ -71,7 +70,7 @@ export function AppsPage() {
     );
   }
 
-  if (!currentUser?.organization) {
+  if (!hasOrganizations) {
     return (
       <Box>
         <Alert

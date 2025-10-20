@@ -157,12 +157,8 @@ export interface UserResponse {
   lastName: string;
   /** User status information */
   status: UserStatusResponse;
-  /** Organization information (null if user is not in an organization) */
-  organization?: UserOrganizationResponse | null;
-  /** Role information (null if user is not in an organization) */
-  role?: RoleResponse | null;
-  /** Invitation status (null for organization owners who were not invited) */
-  invitationStatus?: InvitationStatusResponse | null;
+  /** List of organizations the user is a member of */
+  organizations: UserOrganizationMembership[];
   /**
    * When the user was created
    * @format date-time
@@ -173,6 +169,16 @@ export interface UserResponse {
    * @format date-time
    */
   updatedAt?: string;
+}
+
+/** User's membership in an organization */
+export interface UserOrganizationMembership {
+  /** Minimal organization information for user response */
+  organization: UserOrganizationResponse;
+  /** Role information (roles are now global across all organizations) */
+  role: RoleResponse;
+  /** Invitation status (null for organization owners who were not invited) */
+  invitationStatus?: InvitationStatusResponse | null;
 }
 
 /** Minimal organization information for user response */
@@ -855,24 +861,6 @@ export class Api<
      * No description
      *
      * @tags Users
-     * @name GetUserById
-     * @summary Get user by ID
-     * @request GET:/users/{id}
-     * @secure
-     */
-    getUserById: (id: string, params: RequestParams = {}) =>
-      this.request<UserResponse, ErrorResponse>({
-        path: `/users/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
      * @name UpdateUser
      * @summary Update user
      * @request PUT:/users/{id}
@@ -892,79 +880,8 @@ export class Api<
         format: "json",
         ...params,
       }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name DeleteUser
-     * @summary Delete user
-     * @request DELETE:/users/{id}
-     * @secure
-     */
-    deleteUser: (id: string, params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/users/${id}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name VerifyEmail
-     * @summary Verify user email
-     * @request POST:/users/{id}/verify-email
-     * @secure
-     */
-    verifyEmail: (id: string, params: RequestParams = {}) =>
-      this.request<UserResponse, ErrorResponse>({
-        path: `/users/${id}/verify-email`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name GetAllUsers
-     * @summary Get all users in organization
-     * @request GET:/users
-     * @secure
-     */
-    getAllUsers: (params: RequestParams = {}) =>
-      this.request<UserResponse[], ErrorResponse>({
-        path: `/users`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
   };
   organizations = {
-    /**
-     * No description
-     *
-     * @tags Organizations
-     * @name GetCurrentOrganization
-     * @summary Get current organization
-     * @request GET:/organizations
-     * @secure
-     */
-    getCurrentOrganization: (params: RequestParams = {}) =>
-      this.request<OrganizationResponse, ErrorResponse>({
-        path: `/organizations`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
     /**
      * No description
      *
@@ -1007,6 +924,27 @@ export class Api<
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Organizations
+     * @name GetOrganizationBySubdomain
+     * @summary Get organization by subdomain
+     * @request GET:/organizations/subdomain/{subdomain}
+     * @secure
+     */
+    getOrganizationBySubdomain: (
+      subdomain: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<OrganizationResponse, ErrorResponse>({
+        path: `/organizations/subdomain/${subdomain}`,
+        method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),

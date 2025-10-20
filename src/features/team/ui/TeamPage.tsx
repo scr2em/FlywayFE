@@ -14,25 +14,23 @@ import {
   Alert,
   ScrollArea,
   ActionIcon,
-  Tooltip,
   Menu,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, UserPlus, MailPlus, MoreVertical, Trash2 } from 'lucide-react';
+import { AlertCircle, UserPlus, MoreVertical, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { modals } from '@mantine/modals';
 import { useOrganizationMembersQuery, useRemoveMemberMutation } from '../../../shared/api/queries/organization';
-import { useCurrentUserQuery } from '../../../shared/api/queries/user';
 import { InviteUserModal } from '../../invitation';
-import { useResendInvitationMutation } from '../../../shared/api/queries/invitation';
-import { useShowBackendError, usePermissions } from '../../../shared/hooks';
+import { useShowBackendError, usePermissions, useCurrentOrganization } from '../../../shared/hooks';
+import { useCurrentUserQuery } from '../../../shared/api/queries/user';
 
 export function TeamPage() {
   const { t } = useTranslation();
   const [inviteModalOpened, setInviteModalOpened] = useState(false);
-  const [resendingInvitationId, setResendingUserId] = useState<string | null>(null);
-  const { data: currentUser, isLoading: isLoadingUser } = useCurrentUserQuery();
+  const { currentOrganization, isLoading: isLoadingUser } = useCurrentOrganization();
+  const { data: currentUser } = useCurrentUserQuery();
   const {
     data,
     fetchNextPage,
@@ -42,26 +40,10 @@ export function TeamPage() {
     isError,
   } = useOrganizationMembersQuery();
   
-  const resendInvitationMutation = useResendInvitationMutation();
   const removeMemberMutation = useRemoveMemberMutation();
   const { showError } = useShowBackendError();
   const { canCreateInvitation, canRemoveMember } = usePermissions();
 
-  const handleResendInvitation = async (userId: string) => {
-    setResendingUserId(userId);
-    try {
-      await resendInvitationMutation.mutateAsync(userId);
-      notifications.show({
-        title: t('common.success'),
-        message: t('team.resend_success'),
-        color: 'green',
-      });
-    } catch (error) {
-      showError(error);
-    } finally {
-      setResendingUserId(null);
-    }
-  };
 
   const handleDeleteMember = (memberId: string, memberName: string) => {
     modals.openConfirmModal({
@@ -120,20 +102,6 @@ export function TeamPage() {
     }
   };
 
-  const getInvitationStatusBadgeColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'accepted':
-        return 'green';
-      case 'pending':
-        return 'yellow';
-      case 'rejected':
-        return 'red';
-      case 'expired':
-        return 'gray';
-      default:
-        return 'gray';
-    }
-  };
 
   if (isLoadingUser || isLoading) {
     return (
@@ -143,7 +111,7 @@ export function TeamPage() {
     );
   }
 
-  if (!currentUser?.organization) {
+  if (!currentOrganization) {
     return (
       <Box>
         <Alert
@@ -230,7 +198,7 @@ export function TeamPage() {
                           <Text fw={500} size="sm">
                             {member.user.firstName} {member.user.lastName}
                           </Text>
-                          {member.user.id === currentUser.id && (
+                          {member.user.id === currentUser?.id && (
                             <Text size="xs" c="dimmed">
                               {t('team.you')}
                             </Text>
@@ -258,33 +226,9 @@ export function TeamPage() {
                       </Badge>
                     </Table.Td>
                     <Table.Td>
-                      {member.user.invitationStatus ? (
-                        <Group gap="xs">
-                          <Badge
-                            color={getInvitationStatusBadgeColor(member.user.invitationStatus.status)}
-                            variant="light"
-                          >
-                            {member.user.invitationStatus.status}
-                          </Badge>
-                          {(member.user.invitationStatus.status === 'pending' || 
-                            member.user.invitationStatus.status === 'rejected') && (
-                            <Tooltip label={t('team.resend_invitation')}>
-                              <ActionIcon
-                                variant="subtle"
-                                color="blue"
-                                onClick={() => handleResendInvitation(member.user.id)}
-                                loading={resendingInvitationId === member.user.invitationStatus!.id}
-                              >
-                                <MailPlus size={18} />
-                              </ActionIcon>
-                            </Tooltip>
-                          )}
-                        </Group>
-                      ) : (
-                        <Text size="sm" c="dimmed">
-                          {t('team.no_invitation')}
-                        </Text>
-                      )}
+                      <Text size="sm" c="dimmed">
+                        {t('team.active_member')}
+                      </Text>
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm">
@@ -308,7 +252,7 @@ export function TeamPage() {
                               color="red"
                               leftSection={<Trash2 size={16} />}
                               onClick={() => handleDeleteMember(member.id, `${member.user.firstName} ${member.user.lastName}`)}
-                              disabled={member.user.id === currentUser.id}
+                              disabled={member.user.id === currentUser?.id}
                             >
                               {t('team.delete.menu_item')}
                             </Menu.Item>
