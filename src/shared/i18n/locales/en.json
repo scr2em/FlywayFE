@@ -57,6 +57,7 @@
     "create": {
       "title": "Create Your Organization",
       "subtitle": "Set up your workspace to get started",
+      "modal_title": "Create New Organization",
       "name_label": "Organization Name",
       "name_placeholder": "Enter organization name",
       "subdomain_label": "Subdomain",
@@ -126,7 +127,10 @@
     "organization": "Organization",
     "settings": "Settings",
     "profile": "Profile",
-    "organization_info": "Current Organization"
+    "organization_info": "Current Organization",
+    "switch_organization": "Switch Organization",
+    "create_new_organization": "Create New Organization",
+    "no_organizations": "No organizations yet"
   },
   "team": {
     "title": "Team Members",

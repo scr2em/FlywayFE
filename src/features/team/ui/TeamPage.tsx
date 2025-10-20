@@ -17,8 +17,9 @@ import {
   Menu,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, UserPlus, MoreVertical, Trash2 } from 'lucide-react';
+import { AlertCircle, UserPlus, MoreVertical, Trash2, Building } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { notifications } from '@mantine/notifications';
 import { modals } from '@mantine/modals';
 import { useOrganizationMembersQuery, useRemoveMemberMutation } from '../../../shared/api/queries/organization';
@@ -28,6 +29,7 @@ import { useCurrentUserQuery } from '../../../shared/api/queries/user';
 
 export function TeamPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [inviteModalOpened, setInviteModalOpened] = useState(false);
   const { currentOrganization, isLoading: isLoadingUser } = useCurrentOrganization();
   const { data: currentUser } = useCurrentUserQuery();
@@ -114,13 +116,24 @@ export function TeamPage() {
   if (!currentOrganization) {
     return (
       <Box>
-        <Alert
-          icon={<AlertCircle size={16} />}
-          title={t('team.no_organization_title')}
-          color="yellow"
-        >
-          {t('team.no_organization_message')}
-        </Alert>
+        <Stack gap="md">
+          <Alert
+            icon={<AlertCircle size={16} />}
+            title={t('team.no_organization_title')}
+            color="yellow"
+          >
+            {t('team.no_organization_message')}
+          </Alert>
+          <Button
+            leftSection={<Building size={16} />}
+            variant="light"
+            size="md"
+            onClick={() => navigate('/create-organization')}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            {t('dashboard.create_organization')}
+          </Button>
+        </Stack>
       </Box>
     );
   }

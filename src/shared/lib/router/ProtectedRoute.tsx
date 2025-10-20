@@ -33,11 +33,6 @@ export function ProtectedRoute({ children, requireOrganization = true }: Protect
     return <Navigate to={`/create-organization${location.search}`} replace />;
   }
 
-  // If user has organizations and tries to access create-organization page, redirect to dashboard
-  if (!requireOrganization && hasOrganizations && location.pathname === '/create-organization') {
-    return <Navigate to={`/dashboard${location.search}`} replace />;
-  }
-
   return <>{children}</>;
 }
 

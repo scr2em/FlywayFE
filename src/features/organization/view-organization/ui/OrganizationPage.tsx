@@ -14,6 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, Building, Calendar, Edit } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
@@ -27,6 +28,7 @@ import { ControlledTextInput, ControlledTextArea } from '../../../../shared/cont
 
 export function OrganizationPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const { currentOrganization, isLoading: isLoadingUser } = useCurrentOrganization();
   const { data: organization, isLoading, isError } = useGetOrganizationQuery(currentOrganization?.organization?.subdomain);
@@ -72,13 +74,24 @@ export function OrganizationPage() {
   if (!currentOrganization) {
     return (
       <Box>
-        <Alert
-          icon={<AlertCircle size={16} />}
-          title={t('organization.no_organization_title')}
-          color="yellow"
-        >
-          {t('organization.no_organization_message')}
-        </Alert>
+        <Stack gap="md">
+          <Alert
+            icon={<AlertCircle size={16} />}
+            title={t('organization.no_organization_title')}
+            color="yellow"
+          >
+            {t('organization.no_organization_message')}
+          </Alert>
+          <Button
+            leftSection={<Building size={16} />}
+            variant="light"
+            size="md"
+            onClick={() => navigate('/create-organization')}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            {t('dashboard.create_organization')}
+          </Button>
+        </Stack>
       </Box>
     );
   }

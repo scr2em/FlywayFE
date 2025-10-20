@@ -15,7 +15,7 @@ import {
   ActionIcon,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, Plus, MoreVertical, Trash2, Package } from 'lucide-react';
+import { AlertCircle, Plus, MoreVertical, Trash2, Package, Building } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { notifications } from '@mantine/notifications';
@@ -73,13 +73,24 @@ export function AppsPage() {
   if (!hasOrganizations) {
     return (
       <Box>
-        <Alert
-          icon={<AlertCircle size={16} />}
-          title={t('apps.no_organization_title')}
-          color="yellow"
-        >
-          {t('apps.no_organization_message')}
-        </Alert>
+        <Stack gap="md">
+          <Alert
+            icon={<AlertCircle size={16} />}
+            title={t('apps.no_organization_title')}
+            color="yellow"
+          >
+            {t('apps.no_organization_message')}
+          </Alert>
+          <Button
+            leftSection={<Building size={16} />}
+            variant="light"
+            size="md"
+            onClick={() => navigate('/create-organization')}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            {t('dashboard.create_organization')}
+          </Button>
+        </Stack>
       </Box>
     );
   }

@@ -883,6 +883,24 @@ export class Api<
   };
   organizations = {
     /**
+     * @description Returns all organizations that the authenticated user is a member of
+     *
+     * @tags Organizations
+     * @name GetCurrentUserOrganizations
+     * @summary Get current user's organizations
+     * @request GET:/organizations
+     * @secure
+     */
+    getCurrentUserOrganizations: (params: RequestParams = {}) =>
+      this.request<OrganizationResponse[], ErrorResponse>({
+        path: `/organizations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags Organizations
@@ -929,7 +947,7 @@ export class Api<
       }),
 
     /**
-     * No description
+     * @description Get organization by subdomain. The authenticated user must be a member of the organization.
      *
      * @tags Organizations
      * @name GetOrganizationBySubdomain
